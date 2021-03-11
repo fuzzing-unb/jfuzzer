@@ -1,0 +1,346 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>br.unb.cic.jfuzzer</groupId>
+	<artifactId>jfuzzer-parent</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<properties>
+		<java.version>11</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<project.testresult.directory>${project.build.directory}/test-results</project.testresult.directory>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+		<maven.version>3.5</maven.version>
+		<argLine />
+
+		<!-- dependencies versions -->
+		<lombok.version>1.18.18</lombok.version>
+		<junit.version>5.7.0</junit.version>
+		<assertj-core.version>3.19.0</assertj-core.version>
+		<sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
+		<jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
+		<maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
+		<wagon-git.version>0.3.0</wagon-git.version>
+		<spotbugs-maven-plugin.version>4.2.0</spotbugs-maven-plugin.version>
+		<fb-contrib.version>7.4.3.sb</fb-contrib.version>
+		<findsecbugs-plugin.version>1.11.0</findsecbugs-plugin.version>
+
+		<!-- TESTS configuration -->
+		<maven-surefire-plugin.argLine>-Xmx1024m
+			-XX:MaxMetaspaceSize=512m
+			-XX:+UseParallelGC</maven-surefire-plugin.argLine>
+		<maven-surefire-plugin.reportsDirectory>${project.testresult.directory}/surefire-reports</maven-surefire-plugin.reportsDirectory>
+
+		<jacoco.outputDir>${project.build.directory}/jacoco</jacoco.outputDir>
+		<jacoco.utReportFolder>${jacoco.outputDir}/surefire-reports</jacoco.utReportFolder>
+		<jacoco.utReportFile>${jacoco.utReportFolder}/unitTest.exec</jacoco.utReportFile>
+		<jacoco.destFile>${jacoco.utReportFile}</jacoco.destFile>
+		<jacoco.excludePattern />
+		<!-- <jacoco.excludes>org/bouncycastle/**</jacoco.excludes> -->
+
+		<!-- https://docs.sonarqube.org/latest/analysis/analysis-parameters/ -->
+		<sonar.host.url>http://localhost:9000</sonar.host.url>
+		<sonar.login>admin</sonar.login>
+		<sonar.password>admin</sonar.password>
+		<sonar.language>java</sonar.language>
+		<sonar.sourceEncoding>${project.build.sourceEncoding}</sonar.sourceEncoding>
+		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+		<sonar.junit.reportPaths>${maven-surefire-plugin.reportsDirectory}</sonar.junit.reportPaths>
+		<sonar.coverage.jacoco.xmlReportPaths>${jacoco.utReportFolder}/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.exclusions>**/generated-sources/**/*</sonar.exclusions>
+		<sonar.coverage.exclusions>${jacoco.excludePattern}</sonar.coverage.exclusions>
+	</properties>
+
+	<modules>
+		<module>jfuzzer-api</module>
+		<module>jfuzzer-core</module>
+		<module>jfuzzer-pbt</module>
+		<module>jfuzzer-greybox</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>br.unb.cic.jfuzzer</groupId>
+				<artifactId>jfuzzer-api</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>br.unb.cic.jfuzzer</groupId>
+				<artifactId>jfuzzer-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.projectlombok</groupId>
+				<artifactId>lombok</artifactId>
+				<version>${lombok.version}</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-engine</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-params</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.assertj</groupId>
+				<artifactId>assertj-core</artifactId>
+				<version>${assertj-core.version}</version>
+				<scope>test</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.8.1</version>
+					<configuration>
+						<source>${java.version}</source>
+						<target>${java.version}</target>
+						<encoding>${project.build.sourceEncoding}</encoding>
+						<debug>false</debug>
+						<verbose>false</verbose>
+						<optimize>true</optimize>
+						<showWarnings>true</showWarnings>
+						<showDeprecation>true</showDeprecation>
+						<annotationProcessorPaths>
+							<path>
+								<groupId>org.projectlombok</groupId>
+								<artifactId>lombok</artifactId>
+								<version>${lombok.version}</version>
+							</path>
+						</annotationProcessorPaths>
+					</configuration>
+				</plugin>
+				<!-- https://www.eclemma.org/jacoco/trunk/doc/maven.html -->
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>${jacoco-maven-plugin.version}</version>
+					<executions>
+						<execution>
+							<id>pre-unit-tests</id>
+							<goals>
+								<goal>prepare-agent</goal>
+							</goals>
+							<configuration>
+								<!-- Sets the path to the file which contains the execution data. -->
+								<destFile>${jacoco.utReportFile}</destFile>
+								<output>file</output>
+								<propertyName>jacoco.agent.ut.arg</propertyName>
+							</configuration>
+						</execution>
+						<!-- Ensures that the code coverage report for unit tests is created 
+							after unit tests have been run -->
+						<execution>
+							<id>post-unit-test</id>
+							<phase>test</phase>
+							<goals>
+								<goal>report</goal>
+							</goals>
+							<configuration>
+								<dataFile>${jacoco.utReportFile}</dataFile>
+								<outputDirectory>${jacoco.utReportFolder}</outputDirectory>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven-surefire-plugin.version}</version>
+					<configuration>
+						<skip>${skip.ut.test}</skip>
+						<!-- Force alphabetical order to have a reproducible build -->
+						<runOrder>alphabetical</runOrder>
+						<testFailureIgnore>false</testFailureIgnore>
+						<trimStackTrace>true</trimStackTrace>
+						<reportsDirectory>${maven-surefire-plugin.reportsDirectory}</reportsDirectory>
+						<argLine>${maven-surefire-plugin.argLine} ${jacoco.agent.ut.arg}</argLine>
+						<excludes>
+							<exclude>**/Abstract*</exclude>
+						</excludes>
+					</configuration>
+				</plugin>
+				<!-- https://docs.sonarqube.org/latest/analysis/scan/sonarscanner-for-maven/ -->
+				<plugin>
+					<groupId>org.sonarsource.scanner.maven</groupId>
+					<artifactId>sonar-maven-plugin</artifactId>
+					<version>${sonar-maven-plugin.version}</version>
+				</plugin>
+				<!-- https://spotbugs.github.io/spotbugs-maven-plugin/check-mojo.html -->
+				<plugin>
+					<groupId>com.github.spotbugs</groupId>
+					<artifactId>spotbugs-maven-plugin</artifactId>
+					<version>${spotbugs-maven-plugin.version}</version>
+					<configuration>
+						<effort>Max</effort>
+						<threshold>Low</threshold>
+						<xmlOutput>true</xmlOutput>
+						<failOnError>false</failOnError>
+						<debug>false</debug>
+						<includeTests>false</includeTests>
+						<spotbugsXmlOutput>true</spotbugsXmlOutput>
+						<plugins>
+							<plugin>
+								<groupId>com.mebigfatguy.fb-contrib</groupId>
+								<artifactId>fb-contrib</artifactId>
+								<version>${fb-contrib.version}</version>
+							</plugin>
+							<plugin>
+								<groupId>com.h3xstream.findsecbugs</groupId>
+								<artifactId>findsecbugs-plugin</artifactId>
+								<version>${findsecbugs-plugin.version}</version>
+							</plugin>
+						</plugins>
+					</configuration>
+					<executions>
+						<execution>
+							<goals>
+								<goal>check</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+				<filtering>true</filtering>
+			</testResource>
+			<testResource>
+				<directory>src/test/features</directory>
+			</testResource>
+		</testResources>
+		<!-- https://github.com/synergian/wagon-git -->
+		<!-- https://synergian.github.io/wagon-git/ -->
+		<extensions>
+			<extension>
+				<groupId>ar.com.synergian</groupId>
+				<artifactId>wagon-git</artifactId>
+				<version>${wagon-git.version}</version>
+			</extension>
+		</extensions>
+	</build>
+
+	<!-- http://synergian.github.io/wagon-git/usage.html -->
+	<distributionManagement>
+		<repository>
+			<id>esv-releases-repo</id>
+			<name>Escritório Social Virtual - Repositório de Releases</name>
+			<url>git:releases://git@bitbucket.org:escritorio_social_virtual/maven-repo.git</url>
+		</repository>
+		<snapshotRepository>
+			<id>esv-snapshots-repo</id>
+			<name>Escritório Social Virtual - Repositório de Snapshots</name>
+			<url>git:snapshots://git@bitbucket.org:escritorio_social_virtual/maven-repo.git</url>
+		</snapshotRepository>
+		<site>
+			<id>website</id>
+			<url>file:///tmp/maven-site/</url>
+		</site>
+	</distributionManagement>
+
+
+	<repositories>
+		<repository>
+			<id>central</id>
+			<name>Central Repository</name>
+			<url>https://repo.maven.apache.org/maven2</url>
+			<layout>default</layout>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>esv-releases-repo</id>
+			<name>Escritório Social Virtual - Repositório de Releases</name>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<url>https://api.bitbucket.org/2.0/repositories/escritorio_social_virtual/maven-repo/src/releases</url>
+		</repository>
+		<repository>
+			<id>esv-snapshots-repo</id>
+			<name>Escritório Social Virtual - Repositório de Snapshots</name>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<url>https://api.bitbucket.org/2.0/repositories/escritorio_social_virtual/maven-repo/src/snapshots</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>central</id>
+			<name>Central Repository</name>
+			<url>https://repo.maven.apache.org/maven2</url>
+			<layout>default</layout>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+		</pluginRepository>
+		<pluginRepository>
+			<id>synergian-repo</id>
+			<url>https://raw.github.com/synergian/wagon-git/releases</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<releases>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
+
+</project>
