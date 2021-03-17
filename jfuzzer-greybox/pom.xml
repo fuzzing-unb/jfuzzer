@@ -16,6 +16,10 @@
 	<dependencies>
 		<dependency>
 			<groupId>br.unb.cic.jfuzzer</groupId>
+			<artifactId>jfuzzer-util</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>br.unb.cic.jfuzzer</groupId>
 			<artifactId>jfuzzer-core</artifactId>
 		</dependency>
 		<dependency>
@@ -27,6 +31,16 @@
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
+
+
+		<!-- https://mvnrepository.com/artifact/fr.inria.gforge.spoon/spoon-core -->
+		<dependency>
+			<groupId>fr.inria.gforge.spoon</groupId>
+			<artifactId>spoon-core</artifactId>
+			<version>8.4.0-beta-17</version>
+		</dependency>
+
+
 	</dependencies>
 
 	<build>

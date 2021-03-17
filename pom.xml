@@ -59,9 +59,12 @@
 
 	<modules>
 		<module>jfuzzer-api</module>
+		<module>jfuzzer-util</module>
 		<module>jfuzzer-core</module>
 		<module>jfuzzer-pbt</module>
+		<module>jfuzzer-instrumenter</module>
 		<module>jfuzzer-greybox</module>
+		<module>jfuzzer-greybox-exec</module>
 	</modules>
 
 	<dependencyManagement>
@@ -73,7 +76,32 @@
 			</dependency>
 			<dependency>
 				<groupId>br.unb.cic.jfuzzer</groupId>
+				<artifactId>jfuzzer-util</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>br.unb.cic.jfuzzer</groupId>
 				<artifactId>jfuzzer-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>br.unb.cic.jfuzzer</groupId>
+				<artifactId>jfuzzer-pbt</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>br.unb.cic.jfuzzer</groupId>
+				<artifactId>jfuzzer-instrumenter</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>br.unb.cic.jfuzzer</groupId>
+				<artifactId>jfuzzer-greybox</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>br.unb.cic.jfuzzer</groupId>
+				<artifactId>jfuzzer-greybox-exec</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 
