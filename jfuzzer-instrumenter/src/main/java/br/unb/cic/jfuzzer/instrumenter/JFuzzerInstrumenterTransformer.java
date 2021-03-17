@@ -45,8 +45,9 @@ public class JFuzzerInstrumenterTransformer implements ClassFileTransformer {
         // If you wanted to intercept all the classs then you can remove this
         // conditional check.
 //        if (className.equals("Example")) {
-        if(className.startsWith("br") && !className.contains("observer") && !className.contains("InstrumenterClient")) {
-//        if(!className.startsWith("java") && !className.contains("observer") && !className.contains("InstrumenterClient")) {
+//        if(className.startsWith("br") && !className.contains("observer") && !className.contains("InstrumenterClient")) {
+        if((className.startsWith("br") || className.startsWith("org.apache.commons.codec") )&& !className.contains("observer") && !className.contains("InstrumenterClient") && !className.contains("CommonsCodecRunner")) {
+            
             log.info("Transforming the class " + className);
             try {
                 ClassPool classPool = scopedClassPoolFactory.create(loader, rootPool, ScopedClassPoolRepositoryImpl.getInstance());

@@ -56,8 +56,8 @@
 						<configuration>
 							<archive>
 								<manifest>
-									<mainClass>br.unb.cic.jfuzzer.greybox.tmp.MergeSort</mainClass>
-<!-- 									<mainClass>br.unb.cic.jfuzzer.greybox.tmp.Main</mainClass> -->
+<!-- 									<mainClass>br.unb.cic.jfuzzer.greybox.tmp.MergeSort</mainClass> -->
+									<mainClass>br.unb.cic.jfuzzer.greybox.tmp.Main</mainClass>
 								</manifest>
 							</archive>
 							<descriptorRefs>
