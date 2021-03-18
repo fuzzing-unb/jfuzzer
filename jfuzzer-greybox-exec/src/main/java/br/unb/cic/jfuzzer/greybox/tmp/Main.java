@@ -12,16 +12,25 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Beginning execution ...");        
         
-        StringFuzzer fuzzer = new StringFuzzer(new Range<>(30, 50), FuzzerConfig.getDefaultRandom());
+        StringFuzzer fuzzer = new StringFuzzer(new Range<>(30, 50), FuzzerConfig.getDefaultRandom(), alphabet());
 
         CommonsCodecRunner runner = new CommonsCodecRunner();
         
-        JFuzzerObservable.addObserver(new InstrumenterClient());
+//        JFuzzerObservable.addObserver(new InstrumenterClient());
         JFuzzerObservable.addObserver(runner);
         
-        List<RunnerResult<String>> results = fuzzer.run(runner, 10);
+        List<RunnerResult<String>> results = fuzzer.run(runner, 1);
 
         System.out.println("\n ********* RESULTS **********");
         results.forEach(System.out::println);
+    }
+    
+    
+    private static String alphabet() {
+        StringBuilder sb = new StringBuilder();        
+        for(int i=0; i < 500; i++) {
+            sb.append((char)i);
+        }
+        return sb.toString();
     }
 }
