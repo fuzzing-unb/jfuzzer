@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtMethod;
+import javassist.Modifier;
 import javassist.runtime.Desc;
 import javassist.scopedpool.ScopedClassPoolFactoryImpl;
 import javassist.scopedpool.ScopedClassPoolRepositoryImpl;
@@ -46,31 +47,39 @@ public class JFuzzerInstrumenterTransformer implements ClassFileTransformer {
         // conditional check.
 //        if (className.equals("Example")) {
 //        if(className.startsWith("br") && !className.contains("observer") && !className.contains("InstrumenterClient")) {
-        if((className.startsWith("br") || className.startsWith("org.apache.commons.codec") )&& !className.contains("observer") && !className.contains("InstrumenterClient") && !className.contains("CommonsCodecRunner")) {
-            
+        
+        if ((className.startsWith("br") || className.startsWith("org/apache/commons/codec")) && !className.contains("observer") && !className.contains("InstrumenterClient") && !className.contains("CommonsCodecRunner")) {
+        
+//        if (  !className.startsWith("java/util") 
+//                && !className.startsWith("sun/") && !className.contains("observer") 
+//                && !className.contains("InstrumenterClient") && !className.contains("CommonsCodecRunner") && !className.contains("WeakPairMap")) {
+
             log.info("Transforming the class " + className);
             try {
                 ClassPool classPool = scopedClassPoolFactory.create(loader, rootPool, ScopedClassPoolRepositoryImpl.getInstance());
-                CtClass ctClass = classPool.makeClass(new ByteArrayInputStream(classfileBuffer));                               
-                
+                CtClass ctClass = classPool.makeClass(new ByteArrayInputStream(classfileBuffer));
+
                 CtMethod[] methods = ctClass.getDeclaredMethods();
 //                CtMethod[] methods = ctClass.getMethods();               
-                
+
 //                log.info("CLASSE " + ctClass.getName()+" ... "+ctClass.isFrozen());
 ////                ctClass.defrost();
-                                               
-                for (CtMethod method : methods) {                   
-                    
-                    log.info("Transforming the method " + method.getLongName());
-                    String tmp = "br.unb.cic.jfuzzer.util.observer.JFuzzerObservable.setEvent(\"%s\", \"%s\", \"%s\");";
-                    method.insertBefore(String.format(tmp, ctClass.getName(), method.getLongName(), "ENTER"));
-                    
-                    method.insertBefore(String.format(tmp, ctClass.getName(), method.getLongName(), "EXIT"));
+
+                for (CtMethod method : methods) {
+                    if (canModify(method)) {
+                        log.fine("Transforming the method " + method.getLongName());
+
+                        String tmp = "br.unb.cic.jfuzzer.util.observer.JFuzzerObservable.setEvent(\"%s\", \"%s\", \"%s\");";
+                        method.insertBefore(String.format(tmp, ctClass.getName(), method.getLongName(), "ENTER"));
+                        method.insertAfter(String.format(tmp, ctClass.getName(), method.getLongName(), "EXIT"));
+
 //                    String msg = String.format(METHOD_ENTER, method.getLongName());
 //                    method.insertBefore(String.format("br.unb.cic.jfuzzer.instrumenter.JFuzzerInstrumenterLogger.log(\"%s\");", msg));
 //
 //                    String msgAfter = String.format(METHOD_EXIT, method.getLongName());
 //                    method.insertAfter(String.format("br.unb.cic.jfuzzer.instrumenter.JFuzzerInstrumenterLogger.log(\"%s\");", msgAfter));
+                        
+                    }
                 }
 
                 byteCode = ctClass.toBytecode();
@@ -80,6 +89,14 @@ public class JFuzzerInstrumenterTransformer implements ClassFileTransformer {
             }
         }
         return byteCode;
+    }
+
+    public static boolean canModify(CtMethod method) {
+        return !  (Modifier.isInterface(method.getModifiers()) 
+                || Modifier.isNative(method.getModifiers()) 
+                || Modifier.isAbstract(method.getModifiers())
+                || Modifier.isVolatile(method.getModifiers())
+                || Modifier.isStrict(method.getModifiers()));
     }
 
     /**
