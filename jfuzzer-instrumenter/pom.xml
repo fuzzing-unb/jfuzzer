@@ -46,13 +46,14 @@
 				</executions>
 				<configuration>
 					<descriptorRefs>
+						<!-- <descriptorRef>jar-with-dependencies</descriptorRef> -->
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
-					<appendAssemblyId>true</appendAssemblyId>
+					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifestEntries>
 							<Premain-Class>br.unb.cic.jfuzzer.instrumenter.JFuzzerInstrumenterAgent</Premain-Class>
-							<Can-Retransform-Classes>true</Can-Retransform-Classes>
+							<!-- <Can-Retransform-Classes>true</Can-Retransform-Classes> -->
 						</manifestEntries>
 					</archive>
 				</configuration>

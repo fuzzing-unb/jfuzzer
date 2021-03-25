@@ -24,19 +24,20 @@ public class JFuzzerInstrumenterTransformer implements ClassFileTransformer {
     }
 
     private void parseArgs() {
-        String[] args = agentArgs.split(";");
-        for (String argTmp : args) {
-            String arg = argTmp.strip().toLowerCase();
-            if (arg.startsWith("type=")) {
-                System.err.println("type=" + arg);
-                String acronym = arg.substring(arg.indexOf("="));
-                System.err.println("acronym=" + acronym);
-                Optional<JFuzzerInstrumenterCoverageType> fromAcronym = JFuzzerInstrumenterCoverageType.fromAcronym(acronym);
-                if (fromAcronym.isPresent()) {
-                    type = fromAcronym.get();
-                }
-            }
-        }
+        // TODO
+//        String[] args = agentArgs.split(";");
+//        for (String argTmp : args) {
+//            String arg = argTmp.strip().toLowerCase();
+//            if (arg.startsWith("type=")) {
+//                System.err.println("type=" + arg);
+//                String acronym = arg.substring(arg.indexOf("="));
+//                System.err.println("acronym=" + acronym);
+//                Optional<JFuzzerInstrumenterCoverageType> fromAcronym = JFuzzerInstrumenterCoverageType.fromAcronym(acronym);
+//                if (fromAcronym.isPresent()) {
+//                    type = fromAcronym.get();
+//                }
+//            }
+//        }
     }
 
     @Override

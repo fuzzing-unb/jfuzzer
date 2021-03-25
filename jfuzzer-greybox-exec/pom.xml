@@ -9,6 +9,11 @@
 	</parent>
 	<artifactId>jfuzzer-greybox-exec</artifactId>
 
+
+	<properties>
+		<greybox.mainClass>br.unb.cic.jfuzzer.greybox.tmp.Main</greybox.mainClass>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>br.unb.cic.jfuzzer</groupId>
@@ -17,6 +22,11 @@
 		<dependency>
 			<groupId>br.unb.cic.jfuzzer</groupId>
 			<artifactId>jfuzzer-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>br.unb.cic.jfuzzer</groupId>
+			<artifactId>jfuzzer-instrumenter</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 
 
@@ -27,7 +37,7 @@
 		</dependency>
 	</dependencies>
 
-
+	<!-- mvn clean compile dependency:properties exec:exec -->
 	<build>
 		<plugins>
 
@@ -56,8 +66,8 @@
 						<configuration>
 							<archive>
 								<manifest>
-<!-- 									<mainClass>br.unb.cic.jfuzzer.greybox.tmp.MergeSort</mainClass> -->
-									<mainClass>br.unb.cic.jfuzzer.greybox.tmp.Main</mainClass>
+									<!-- <mainClass>br.unb.cic.jfuzzer.greybox.tmp.MergeSort</mainClass> -->
+									<mainClass>${greybox.mainClass}</mainClass>
 								</manifest>
 							</archive>
 							<descriptorRefs>
@@ -67,6 +77,44 @@
 					</execution>
 				</executions>
 			</plugin>
+
+			<plugin>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.5.1</version>
+				<executions>
+					<execution>
+						<id>getClasspathFilenames</id>
+						<goals>
+							<goal>properties</goal>
+						</goals>
+					</execution>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<configuration>
+					<executable>java</executable>
+					<arguments>
+						<argument>-Xmx1000m</argument>
+						<argument>-javaagent:${br.unb.cic.jfuzzer:jfuzzer-instrumenter:jar}</argument>
+<!-- 						<argument>-javaagent:lib/jfuzzer-instrumenter-${project.version}-jar-with-dependencies.jar</argument> -->
+						<argument>-classpath</argument>
+						<classpath />
+						<argument>${greybox.mainClass}</argument>
+					</arguments>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 </project>
