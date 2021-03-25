@@ -8,6 +8,7 @@ import br.unb.cic.jfuzzer.api.AbstractFuzzer;
 import br.unb.cic.jfuzzer.api.Mutator;
 import br.unb.cic.jfuzzer.fuzzer.NumberFuzzer;
 import br.unb.cic.jfuzzer.util.Range;
+import br.unb.cic.jfuzzer.fuzzer.StringFuzzer;
 
 public class StringMutatorFuzzer extends AbstractFuzzer<String> {
 
@@ -31,21 +32,23 @@ public class StringMutatorFuzzer extends AbstractFuzzer<String> {
         this.minMutations = minMutations;
         this.maxMutations = maxMutations;
         this.random = random;
-        mutators = List.of(new DeleteRandomCharacterMutation(),
-                new InsertRandomCharacterMutation(),
-                new FlipRandomCharacterMutation());
-        // TODO rever o numberFuzzer ... nao pega o limite superior (por isso ficou com
-        // mais 1)
-        numberFuzzer = new NumberFuzzer<Integer>(new Range<>(1, mutators.size() + 1), random);
+        mutators = List.of(new FlipRandomCharacterMutation(),
+            new InsertRandomCharacterMutation(),
+            new DeleteRandomCharacterMutation());            
+        numberFuzzer = new NumberFuzzer<Integer>(new Range<>(1, mutators.size()), random);
     }
 
     @Override
     public String fuzz() {
-        
         //TODO tratar o caso de mutacao sobre mutacao
-        
         int index = numberFuzzer.fuzz() - 1;
         Mutator<String> mutation = mutators.get(index);
+        
+        return mutation.mutate(input);
+    }
+
+    public String fuzzMutator(int idx) {
+        Mutator<String> mutation = mutators.get(idx);
         return mutation.mutate(input);
     }
 
@@ -53,33 +56,45 @@ public class StringMutatorFuzzer extends AbstractFuzzer<String> {
 
         @Override
         public String mutate(String input) {
-            // TODO Auto-generated method stub
-            System.err.println("DeleteRandomCharacterMutation");
-            return input;
+            Random random = new Random();
+            int index = random.nextInt(input.length());
+            StringBuilder sb = new StringBuilder(input);
+            sb.deleteCharAt(index);
+            String resultString = sb.toString();
+            return resultString;
         }
 
     }
-
+    @Deprecated
     class InsertRandomCharacterMutation implements Mutator<String> {
 
         @Override
         public String mutate(String input) {
-            // TODO Auto-generated method stub
-            System.err.println("InsertRandomCharacterMutation");
-            return input;
+            StringFuzzer fuzzer = new StringFuzzer(new Range<>(1, 1), FuzzerConfig.getDefaultRandom());
+            Random random = new Random();
+            int index = random.nextInt(input.length());
+            StringBuilder sb = new StringBuilder(input);
+            sb.insert(index,fuzzer.fuzz());
+            String resultString = sb.toString();
+            return resultString;
         }
+        
 
     }
 
+    @Deprecated
     class FlipRandomCharacterMutation implements Mutator<String> {
 
         @Override
         public String mutate(String input) {
-            // TODO Auto-generated method stub
-            System.err.println("FlipRandomCharacterMutation");
-            return input;
+            StringFuzzer fuzzer = new StringFuzzer(new Range<>(1, 1), FuzzerConfig.getDefaultRandom());
+            Random random = new Random();
+            int index = random.nextInt(input.length());
+            StringBuilder sb = new StringBuilder(input);
+            sb.replace(index, index+1, fuzzer.fuzz());
+            String resultString = sb.toString();
+            return resultString;
         }
-
     }
 
 }

@@ -44,7 +44,7 @@ public class NumberFuzzer<T extends Number> extends AbstractFuzzer<T> {
         if (min > max) {
             throw new IllegalArgumentException("'max' deve ser maior que 'min'");
         }
-        return (T) Integer.valueOf(random.ints(min, max).findFirst().getAsInt());
+        return (T) Integer.valueOf(random.ints(min, max+1).findFirst().getAsInt());
     }
 
     @SuppressWarnings("unchecked")
@@ -52,7 +52,7 @@ public class NumberFuzzer<T extends Number> extends AbstractFuzzer<T> {
         if (min > max) {
             throw new IllegalArgumentException("'max' deve ser maior que 'min'");
         }
-        return (T) Double.valueOf(random.doubles(min, max).findFirst().getAsDouble());
+        return (T) Double.valueOf(random.doubles(min, max+1).findFirst().getAsDouble());
     }
 
     @SuppressWarnings("unchecked")
@@ -60,7 +60,7 @@ public class NumberFuzzer<T extends Number> extends AbstractFuzzer<T> {
         if (min > max) {
             throw new IllegalArgumentException("'max' deve ser maior que 'min'");
         }
-        return (T) Float.valueOf((float) random.doubles(min, max).findFirst().getAsDouble());
+        return (T) Float.valueOf((float) random.doubles(min, max+1).findFirst().getAsDouble());
     }
 
     @SuppressWarnings("unchecked")
@@ -68,7 +68,7 @@ public class NumberFuzzer<T extends Number> extends AbstractFuzzer<T> {
         if (min > max) {
             throw new IllegalArgumentException("'max' deve ser maior que 'min'");
         }
-        return (T) Long.valueOf(random.longs(min, max).findFirst().getAsLong());
+        return (T) Long.valueOf(random.longs(min, max+1).findFirst().getAsLong());
     }
 
 }
