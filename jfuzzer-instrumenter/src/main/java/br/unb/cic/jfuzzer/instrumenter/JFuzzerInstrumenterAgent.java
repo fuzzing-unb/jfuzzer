@@ -3,6 +3,8 @@ package br.unb.cic.jfuzzer.instrumenter;
 import java.lang.instrument.Instrumentation;
 import java.util.logging.Logger;
 
+import br.unb.cic.jfuzzer.instrumenter.transformer.JFuzzerInstrumenterTransformer;
+
 public class JFuzzerInstrumenterAgent {
     private static final Logger log = Logger.getLogger(JFuzzerInstrumenterAgent.class.getName());
 
@@ -18,8 +20,7 @@ public class JFuzzerInstrumenterAgent {
      */
     public static void premain(String agentArgs, Instrumentation instrumentation) throws InstantiationException {
         log.info("Starting Java Agent......");
-        JFuzzerInstrumenterTransformer interceptingClassTransformer = new JFuzzerInstrumenterTransformer();
-        interceptingClassTransformer.init();
+        JFuzzerInstrumenterTransformer interceptingClassTransformer = new JFuzzerInstrumenterTransformer(agentArgs);
         instrumentation.addTransformer(interceptingClassTransformer);
     }
     

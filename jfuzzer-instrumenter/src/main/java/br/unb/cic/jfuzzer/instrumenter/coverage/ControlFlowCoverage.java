@@ -1,11 +1,12 @@
-package br.unb.cic.jfuzzer.instrumenter;
+package br.unb.cic.jfuzzer.instrumenter.coverage;
 
 import java.io.ByteArrayInputStream;
-import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import br.unb.cic.jfuzzer.instrumenter.transformer.JFuzzerInstrumenterTransformer;
 
 import javassist.ClassPool;
 import javassist.CtClass;
@@ -15,12 +16,7 @@ import javassist.runtime.Desc;
 import javassist.scopedpool.ScopedClassPoolFactoryImpl;
 import javassist.scopedpool.ScopedClassPoolRepositoryImpl;
 
-/**
- * Class transformer which intercepts the method call, used to emit the debug
- * information.
- */
-public class JFuzzerInstrumenterTransformer implements ClassFileTransformer {
-
+public class ControlFlowCoverage {
     private static final String METHOD_ENTER = "Entering method: %s";
     private static final String METHOD_EXIT = "Exiting method: %s";
 
@@ -40,16 +36,15 @@ public class JFuzzerInstrumenterTransformer implements ClassFileTransformer {
         rootPool = ClassPool.getDefault();
     }
 
-    @Override
     public byte[] transform(Module module, ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
         byte[] byteCode = classfileBuffer;
         // If you wanted to intercept all the classs then you can remove this
         // conditional check.
 //        if (className.equals("Example")) {
 //        if(className.startsWith("br") && !className.contains("observer") && !className.contains("InstrumenterClient")) {
-        
+
         if ((className.startsWith("br") || className.startsWith("org/apache/commons/codec")) && !className.contains("observer") && !className.contains("InstrumenterClient") && !className.contains("CommonsCodecRunner")) {
-        
+
 //        if (  !className.startsWith("java/util") 
 //                && !className.startsWith("sun/") && !className.contains("observer") 
 //                && !className.contains("InstrumenterClient") && !className.contains("CommonsCodecRunner") && !className.contains("WeakPairMap")) {
@@ -78,7 +73,7 @@ public class JFuzzerInstrumenterTransformer implements ClassFileTransformer {
 //
 //                    String msgAfter = String.format(METHOD_EXIT, method.getLongName());
 //                    method.insertAfter(String.format("br.unb.cic.jfuzzer.instrumenter.JFuzzerInstrumenterLogger.log(\"%s\");", msgAfter));
-                        
+
                     }
                 }
 
@@ -92,60 +87,10 @@ public class JFuzzerInstrumenterTransformer implements ClassFileTransformer {
     }
 
     public static boolean canModify(CtMethod method) {
-        return !  (Modifier.isInterface(method.getModifiers()) 
-                || Modifier.isNative(method.getModifiers()) 
+        return !(Modifier.isInterface(method.getModifiers())
+                || Modifier.isNative(method.getModifiers())
                 || Modifier.isAbstract(method.getModifiers())
                 || Modifier.isVolatile(method.getModifiers())
                 || Modifier.isStrict(method.getModifiers()));
     }
-
-    /**
-     * An agent provides an implementation of this interface method in order to
-     * transform class files. Transforms the given class file and returns a new
-     * replacement class file. We check our config with classes and intercept only
-     * when the Corresponding Class Name, Method Name, Method Signature matches.
-     *
-     * @param loader              The defining loader of the class to be
-     *                            transformed, may be {@code null} if the bootstrap
-     *                            loader.
-     * @param className           The name of the class in the internal form of
-     *                            fully qualified class.
-     * @param classBeingRedefined If this is triggered by a redefine or re
-     *                            transform, the class being redefined.
-     * @param protectionDomain    The protection domain of the class being defined
-     *                            or redefined.
-     * @param classfileBuffer     The input byte buffer in class file format - Have
-     *                            to be instrumented.
-     * @return The transformed byte code.
-     * @throws IllegalClassFormatException The IllegalClassFormat Exception.
-     */
-//    //@Override
-//    public byte[] transform(Module module, ClassLoader loader, String className, Class<?> classBeingRedefined,
-//                            ProtectionDomain protectionDomain, byte[] classfileBuffer)
-//            throws IllegalClassFormatException {
-//
-//        byte[] byteCode = classfileBuffer;
-//        // If you wanted to intercept all the classs then you can remove this conditional check.
-//        if (className.equals("Example")) {
-//            log.info("Transforming the class " + className);
-//            try {
-//                ClassPool classPool = scopedClassPoolFactory.create(loader, rootPool,
-//                        ScopedClassPoolRepositoryImpl.getInstance());
-//                CtClass ctClass = classPool.makeClass(new ByteArrayInputStream(classfileBuffer));
-//                CtMethod[] methods = ctClass.getDeclaredMethods();
-//
-//                for (CtMethod method : methods) {
-//                    if (method.getName().equals("main")){
-//                        method.insertAfter("System.out.println(\"Logging using Agent\");");
-//                    }
-//                }
-//                byteCode = ctClass.toBytecode();
-//                ctClass.detach();
-//            } catch (Throwable ex) {
-//                log.log(Level.SEVERE, "Error in transforming the class: " + className, ex);
-//            }
-//        }
-//        return byteCode;
-//    }
-
 }
