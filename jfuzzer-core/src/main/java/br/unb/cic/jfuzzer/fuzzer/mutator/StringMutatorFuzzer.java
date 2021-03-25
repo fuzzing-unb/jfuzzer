@@ -47,7 +47,7 @@ public class StringMutatorFuzzer extends AbstractFuzzer<String> {
         return mutation.mutate(input);
     }
 
-    public String fuzzMutator(int idx) {
+    public String fuzz(int idx) {
         Mutator<String> mutation = mutators.get(idx);
         return mutation.mutate(input);
     }

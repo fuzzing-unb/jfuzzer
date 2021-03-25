@@ -10,20 +10,20 @@ public class StringMutatorFuzzerTest {
     void testDeleteRandomCharacterMutation() {
         String input = "123456789";
         StringMutatorFuzzer mutatorFuzzer = new StringMutatorFuzzer(input);
-        assertThat(input).hasSizeGreaterThan(mutatorFuzzer.fuzzMutator(2).length());
+        assertThat(input).hasSizeGreaterThan(mutatorFuzzer.fuzz(2).length());
     }
 
     @Test
     void testInsertRandomCharacterMutation() {
         String input = "123456789";
         StringMutatorFuzzer mutatorFuzzer = new StringMutatorFuzzer(input);
-        assertThat(input).hasSizeLessThan(mutatorFuzzer.fuzzMutator(1).length());         
+        assertThat(input).hasSizeLessThan(mutatorFuzzer.fuzz(1).length());         
     }
 
     @Test
     void testFlipRandomCharacterMutation() {
         String input = "123456789";
         StringMutatorFuzzer mutatorFuzzer = new StringMutatorFuzzer(input);
-        assertThat(input).hasSize(mutatorFuzzer.fuzzMutator(0).length());         
+        assertThat(input).hasSize(mutatorFuzzer.fuzz(0).length());         
     }
 }
