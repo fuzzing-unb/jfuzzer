@@ -39,13 +39,17 @@ public class CommonsCodecRunner implements Runner, JFuzzerObserver {
             result = new RunnerResult<>(input, RunnerStatus.FAIL);
         }
         
-        events.forEach(e -> System.out.println(">>> "+ e));
+//        events.forEach(e -> System.out.println(">>> "+ e));
+        showEvents();
         
         return result;
     }
     
+    private void showEvents() {
+        events.forEach(e -> System.out.println(">>> "+ e));
+    }
     
-    public void update(Event event) {
+    public void updateEvent(Event event) {
         events.add(event);
     }
 

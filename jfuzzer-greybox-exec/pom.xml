@@ -21,12 +21,12 @@
 		</dependency>
 		<dependency>
 			<groupId>br.unb.cic.jfuzzer</groupId>
-			<artifactId>jfuzzer-core</artifactId>
+			<artifactId>jfuzzer-greybox</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>br.unb.cic.jfuzzer</groupId>
 			<artifactId>jfuzzer-instrumenter</artifactId>
-			<scope>runtime</scope>
+			<scope>provided</scope>
 		</dependency>
 
 
@@ -39,6 +39,7 @@
 
 	<!-- mvn clean compile dependency:properties exec:exec -->
 	<build>
+		<defaultGoal>clean compile dependency:properties exec:exec</defaultGoal>
 		<plugins>
 
 			<!-- <plugin> -->
@@ -107,7 +108,7 @@
 					<arguments>
 						<argument>-Xmx1000m</argument>
 						<argument>-javaagent:${br.unb.cic.jfuzzer:jfuzzer-instrumenter:jar}</argument>
-<!-- 						<argument>-javaagent:lib/jfuzzer-instrumenter-${project.version}-jar-with-dependencies.jar</argument> -->
+						<!-- <argument>-javaagent:lib/jfuzzer-instrumenter-${project.version}-jar-with-dependencies.jar</argument> -->
 						<argument>-classpath</argument>
 						<classpath />
 						<argument>${greybox.mainClass}</argument>

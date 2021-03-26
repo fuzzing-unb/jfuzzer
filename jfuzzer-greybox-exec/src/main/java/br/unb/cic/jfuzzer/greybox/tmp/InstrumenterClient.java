@@ -5,7 +5,7 @@ import br.unb.cic.jfuzzer.util.observer.JFuzzerObserver;
 
 public class InstrumenterClient implements JFuzzerObserver {
 
-    public void update(Event event) {
+    public void updateEvent(Event event) {
         System.out.println(">>> "+event);
     }
 

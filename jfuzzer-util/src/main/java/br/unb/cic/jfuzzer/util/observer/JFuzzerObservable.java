@@ -19,7 +19,7 @@ public class JFuzzerObservable {
     }
 
     public static void setEvent(Event event) {
-        observers.forEach(o -> o.update(event));
+        observers.forEach(o -> o.updateEvent(event));
     }
 
 }

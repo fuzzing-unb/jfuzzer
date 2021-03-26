@@ -19,7 +19,8 @@ public class JFuzzerInstrumenterTransformer implements ClassFileTransformer {
 
     public JFuzzerInstrumenterTransformer(String agentArgs) {
         this.agentArgs = agentArgs;
-        this.type = JFuzzerInstrumenterCoverageType.CONTROL_FLOW;
+        // this.type = JFuzzerInstrumenterCoverageType.CONTROL_FLOW;
+        this.type = JFuzzerInstrumenterCoverageType.BRANCH;
         parseArgs();
     }
 
@@ -42,21 +43,30 @@ public class JFuzzerInstrumenterTransformer implements ClassFileTransformer {
 
     @Override
     public byte[] transform(Module module, ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
+        //System.err.println("class .... " + className);
 
-        switch (type) {
-            case BRANCH:
-                ClassReader cr = new ClassReader(classfileBuffer);
-                ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-                BranchCoverage ca = new BranchCoverage(cw);
-                cr.accept(ca, 0);
-                return cw.toByteArray();
-            case FULL:
-                return classfileBuffer;
-            default:
-                ControlFlowCoverage coverage = new ControlFlowCoverage();
-                coverage.init();
-                return coverage.transform(module, loader, className, classBeingRedefined, protectionDomain, classfileBuffer);
+        if ((!className.startsWith("br/unb/cic/jfuzzer/util")
+                && !className.startsWith("java")
+                && !className.startsWith("javax")
+                && !className.startsWith("sun")
+                && !className.startsWith("jdk"))) {
+            switch (type) {
+                case BRANCH:
+                    ClassReader cr = new ClassReader(classfileBuffer);
+                    ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+                    BranchCoverage ca = new BranchCoverage(cw);
+                    cr.accept(ca, 0);
+                    return cw.toByteArray();
+                case FULL:
+                    return classfileBuffer;
+                default:
+                    ControlFlowCoverage coverage = new ControlFlowCoverage();
+                    coverage.init();
+                    return coverage.transform(module, loader, className, classBeingRedefined, protectionDomain, classfileBuffer);
+            }
         }
+
+        return classfileBuffer;
 
     }
 
