@@ -2,6 +2,7 @@ package br.unb.cic.jfuzzer.greybox.tmp;
 
 import br.unb.cic.jfuzzer.util.observer.JFuzzerObservable;
 
+@Deprecated
 public class MergeSort {
     // Merges two subarrays of arr[].
     // First subarray is arr[l..m]

@@ -17,11 +17,10 @@ public class Main {
         
         CommonsCodecRunner runner = new CommonsCodecRunner();
         
-//        JFuzzerObservable.addObserver(new InstrumenterClient());
         //JFuzzerObservable.addObserver(runner);
         JFuzzerObservable.addObserver(fuzzer);
         
-        List<RunnerResult<String>> results = fuzzer.run(runner, 2);
+        List<RunnerResult<String>> results = fuzzer.run(runner, 1);
 
         System.out.println("\n ********* RESULTS **********");
         results.forEach(System.out::println);

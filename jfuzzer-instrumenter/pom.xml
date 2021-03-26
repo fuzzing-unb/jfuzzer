@@ -12,6 +12,8 @@
 	<properties>
 		<javassist.version>3.27.0-GA</javassist.version>
 		<asm.version>9.1</asm.version>
+		
+		<soot.version>4.2.0</soot.version>
 	</properties>
 
 	<dependencies>
@@ -28,6 +30,13 @@
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm</artifactId>
 			<version>${asm.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.soot-oss</groupId>
+			<artifactId>soot</artifactId>
+			<version>${soot.version}</version>
+			<scope>provided</scope>
 		</dependency>
 
 	</dependencies>

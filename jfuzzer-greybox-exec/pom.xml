@@ -12,6 +12,16 @@
 
 	<properties>
 		<greybox.mainClass>br.unb.cic.jfuzzer.greybox.tmp.Main</greybox.mainClass>
+		<!-- for coverage type look JFuzzerInstrumenterCoverageType enum -->
+		<coverage.type>c</coverage.type>
+		<!-- <coverage.type>b</coverage.type> -->
+<!-- 		<coverage.type>l</coverage.type> -->
+		<agent.args>type=${coverage.type}</agent.args>
+
+		<!-- plugins versions -->
+		<maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
+		<maven-dependency-plugin.version>3.1.2</maven-dependency-plugin.version>
+		<exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
 	</properties>
 
 	<dependencies>
@@ -37,27 +47,13 @@
 		</dependency>
 	</dependencies>
 
-	<!-- mvn clean compile dependency:properties exec:exec -->
 	<build>
 		<defaultGoal>clean compile dependency:properties exec:exec</defaultGoal>
 		<plugins>
-
-			<!-- <plugin> -->
-			<!-- <groupId>org.apache.maven.plugins</groupId> -->
-			<!-- <artifactId>maven-jar-plugin</artifactId> -->
-			<!-- <configuration> -->
-			<!-- <archive> -->
-			<!-- <manifest> -->
-			<!-- <addClasspath>true</addClasspath> -->
-			<!-- <mainClass>br.unb.cic.jfuzzer.greybox.tmp.MergeSort</mainClass> -->
-			<!-- </manifest> -->
-			<!-- </archive> -->
-			<!-- </configuration> -->
-			<!-- </plugin> -->
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
+				<version>${maven-assembly-plugin.version}</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -67,7 +63,6 @@
 						<configuration>
 							<archive>
 								<manifest>
-									<!-- <mainClass>br.unb.cic.jfuzzer.greybox.tmp.MergeSort</mainClass> -->
 									<mainClass>${greybox.mainClass}</mainClass>
 								</manifest>
 							</archive>
@@ -78,10 +73,10 @@
 					</execution>
 				</executions>
 			</plugin>
-
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.5.1</version>
+				<version>${maven-dependency-plugin.version}</version>
 				<executions>
 					<execution>
 						<id>getClasspathFilenames</id>
@@ -89,6 +84,7 @@
 							<goal>properties</goal>
 						</goals>
 					</execution>
+					<!-- TODO remove this execution -->
 					<execution>
 						<phase>install</phase>
 						<goals>
@@ -103,11 +99,12 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
+				<version>${exec-maven-plugin.version}</version>
 				<configuration>
 					<executable>java</executable>
 					<arguments>
 						<argument>-Xmx1000m</argument>
-						<argument>-javaagent:${br.unb.cic.jfuzzer:jfuzzer-instrumenter:jar}</argument>
+						<argument>-javaagent:${br.unb.cic.jfuzzer:jfuzzer-instrumenter:jar}=${agent.args}</argument>
 						<!-- <argument>-javaagent:lib/jfuzzer-instrumenter-${project.version}-jar-with-dependencies.jar</argument> -->
 						<argument>-classpath</argument>
 						<classpath />
@@ -115,7 +112,6 @@
 					</arguments>
 				</configuration>
 			</plugin>
-
 		</plugins>
 	</build>
 </project>

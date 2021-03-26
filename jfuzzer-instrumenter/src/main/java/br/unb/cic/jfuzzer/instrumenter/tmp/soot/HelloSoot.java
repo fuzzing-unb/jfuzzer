@@ -1,4 +1,4 @@
-package br.unb.cic.jfuzzer.greybox.tmp.soot;
+package br.unb.cic.jfuzzer.instrumenter.tmp.soot;
 
 import java.io.File;
 import java.util.Collections;

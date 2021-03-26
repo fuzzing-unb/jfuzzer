@@ -43,7 +43,9 @@ public class ControlFlowCoverage {
 //        if (className.equals("Example")) {
 //        if(className.startsWith("br") && !className.contains("observer") && !className.contains("InstrumenterClient")) {
 
-        if ((className.startsWith("br") || className.startsWith("org/apache/commons/codec")) && !className.contains("observer") && !className.contains("InstrumenterClient") && !className.contains("CommonsCodecRunner")) {
+        if ((className.startsWith("br") || className.startsWith("org/apache/commons/codec")) 
+                && !className.contains("observer") 
+                && !className.contains("GreyBoxFuzzer")) {
 
 //        if (  !className.startsWith("java/util") 
 //                && !className.startsWith("sun/") && !className.contains("observer") 

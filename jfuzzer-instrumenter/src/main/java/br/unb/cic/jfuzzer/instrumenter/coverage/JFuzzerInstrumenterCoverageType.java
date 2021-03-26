@@ -5,6 +5,7 @@ import java.util.Optional;
 public enum JFuzzerInstrumenterCoverageType {
     CONTROL_FLOW("Control Flow Coverage", "c"),
     BRANCH("Branch Coverage", "b"),
+    LINE("Line Coverage", "l"),
     FULL("Full Coverage", "f");
 
     private String label;
