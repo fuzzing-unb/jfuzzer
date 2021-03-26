@@ -4,6 +4,8 @@ import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.reflect.InvocationTargetException;
 import java.security.ProtectionDomain;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 import org.objectweb.asm.ClassReader;
@@ -16,13 +18,18 @@ import br.unb.cic.jfuzzer.instrumenter.coverage.JFuzzerInstrumenterCoverageType;
 
 public class JFuzzerInstrumenterTransformer implements ClassFileTransformer {
 
+    private static final String EXCLUDED_PACKAGES = "excludedPackages=";
     private static final String ARGS_TYPE = "type=";
+    private static final List<String> EXCLUDED_PACKAGES_PREFIXES = List.of("br/unb/cic/jfuzzer/util","java","javax","sun","jdk","com/sun","com/ibm","org/xml","apple/awt","com.apple");
+    
     private JFuzzerInstrumenterCoverageType type;
     private String agentArgs;
+    private List<String> excludedPackages;
 
     public JFuzzerInstrumenterTransformer(String agentArgs) {
         this.agentArgs = agentArgs;
         this.type = JFuzzerInstrumenterCoverageType.CONTROL_FLOW;
+        excludedPackages = EXCLUDED_PACKAGES_PREFIXES;
         parseArgs();
     }
 
@@ -30,14 +37,20 @@ public class JFuzzerInstrumenterTransformer implements ClassFileTransformer {
         String[] args = agentArgs.split(";");
         for (String argTmp : args) {
             String arg = argTmp.strip().toLowerCase();
+            
             if (arg.startsWith(ARGS_TYPE)) {
-                System.err.println(ARGS_TYPE + arg);
                 String acronym = arg.substring(arg.indexOf("=") + 1);
-                System.err.println("acronym=" + acronym);
                 Optional<JFuzzerInstrumenterCoverageType> fromAcronym = JFuzzerInstrumenterCoverageType.fromAcronym(acronym);
                 if (fromAcronym.isPresent()) {
                     this.type = fromAcronym.get();
-                    System.err.println("********** type=" + type);
+                }
+            }
+            
+            if(arg.startsWith(EXCLUDED_PACKAGES)) {
+                excludedPackages = new LinkedList<>();
+                String[] packages = arg.substring(arg.indexOf("=") + 1).split(",");
+                for(String pack: packages) {
+                    excludedPackages.add(pack.strip().replaceAll("[\\s.]", "/"));
                 }
             }
         }
@@ -47,11 +60,22 @@ public class JFuzzerInstrumenterTransformer implements ClassFileTransformer {
     public byte[] transform(Module module, ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
 //        System.err.println("class .... " + className+" ..... type="+type.getLabel());
 
-        if ((!className.startsWith("br/unb/cic/jfuzzer/util")
-                && !className.startsWith("java")
-                && !className.startsWith("javax")
-                && !className.startsWith("sun")
-                && !className.startsWith("jdk"))) {
+        if(validPackagePrefix(className)) {
+//        if ((!className.startsWith("br/unb/cic/jfuzzer/util")
+//                && !className.startsWith("java")
+//                && !className.startsWith("javax")
+//                && !className.startsWith("sun")
+//                && !className.startsWith("jdk"))) {
+            
+//            excludedPackages.add("java.*");
+//            excludedPackages.add("sun.*");
+//            excludedPackages.add("javax.*");
+//            excludedPackages.add("com.sun.*");
+//            excludedPackages.add("com.ibm.*");
+//            excludedPackages.add("org.xml.*");
+//            excludedPackages.add("org.w3c.*");
+//            excludedPackages.add("apple.awt.*");
+//            excludedPackages.add("com.apple.*");
 
             switch (type) {
                 case BRANCH:
@@ -85,4 +109,22 @@ public class JFuzzerInstrumenterTransformer implements ClassFileTransformer {
         return classfileBuffer;
     }
 
+    
+    private boolean validPackagePrefix(String className) {
+        return !excludedPackages.stream()
+                .anyMatch(className::startsWith);
+    }
+    
+        
+//        excludedPackages.add("java.*");
+//        excludedPackages.add("sun.*");
+//        excludedPackages.add("javax.*");
+//        excludedPackages.add("com.sun.*");
+//        excludedPackages.add("com.ibm.*");
+//        excludedPackages.add("org.xml.*");
+//        excludedPackages.add("org.w3c.*");
+//        excludedPackages.add("apple.awt.*");
+//        excludedPackages.add("com.apple.*");
+
+    
 }
