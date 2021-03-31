@@ -16,7 +16,7 @@ import javassist.runtime.Desc;
 import javassist.scopedpool.ScopedClassPoolFactoryImpl;
 import javassist.scopedpool.ScopedClassPoolRepositoryImpl;
 
-public class ControlFlowCoverage {
+public class MethodCoverage {
     private static final String METHOD_ENTER = "Entering method: %s";
     private static final String METHOD_EXIT = "Exiting method: %s";
 
@@ -43,6 +43,7 @@ public class ControlFlowCoverage {
 //        if (className.equals("Example")) {
 //        if(className.startsWith("br") && !className.contains("observer") && !className.contains("InstrumenterClient")) {
 
+        //TODO usar o agentArgs
         if ((className.startsWith("br") || className.startsWith("org/apache/commons/codec")) 
                 && !className.contains("observer") 
                 && !className.contains("GreyBoxFuzzer")) {

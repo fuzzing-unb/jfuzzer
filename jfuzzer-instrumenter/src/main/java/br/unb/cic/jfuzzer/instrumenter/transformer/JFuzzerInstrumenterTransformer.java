@@ -12,15 +12,16 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 
-import br.unb.cic.jfuzzer.instrumenter.coverage.BranchCoverage;
-import br.unb.cic.jfuzzer.instrumenter.coverage.ControlFlowCoverage;
+import br.unb.cic.jfuzzer.instrumenter.coverage.LineCoverage;
+import br.unb.cic.jfuzzer.instrumenter.coverage.MethodCoverage;
 import br.unb.cic.jfuzzer.instrumenter.coverage.JFuzzerInstrumenterCoverageType;
+import br.unb.cic.jfuzzer.instrumenter.coverage.BranchCoverage;
 
 public class JFuzzerInstrumenterTransformer implements ClassFileTransformer {
 
     private static final String EXCLUDED_PACKAGES = "excludedPackages=";
     private static final String ARGS_TYPE = "type=";
-    private static final List<String> EXCLUDED_PACKAGES_PREFIXES = List.of("br/unb/cic/jfuzzer/util","java","javax","sun","jdk","com/sun","com/ibm","org/xml","apple/awt","com.apple");
+    private static final List<String> EXCLUDED_PACKAGES_PREFIXES = List.of("br/unb/cic/jfuzzer/util","br/unb/cic/jfuzzer/instrumenter","java","javax","sun","jdk","com/sun","com/ibm","org/xml","apple/awt","com.apple","org.objectweb.asm");
     
     private JFuzzerInstrumenterCoverageType type;
     private String agentArgs;
@@ -81,11 +82,11 @@ public class JFuzzerInstrumenterTransformer implements ClassFileTransformer {
                 case BRANCH:
                     return runAsm(BranchCoverage.class, classfileBuffer);
                 case LINE:
-                    return runAsm(BranchCoverage.class, classfileBuffer);
+                    return runAsm(LineCoverage.class, classfileBuffer);
                 case FULL:
-                    return runAsm(BranchCoverage.class, classfileBuffer);
+                    return runAsm(LineCoverage.class, classfileBuffer);
                 default:
-                    ControlFlowCoverage coverage = new ControlFlowCoverage();
+                    MethodCoverage coverage = new MethodCoverage();
                     coverage.init();
                     return coverage.transform(module, loader, className, classBeingRedefined, protectionDomain, classfileBuffer);
             }
