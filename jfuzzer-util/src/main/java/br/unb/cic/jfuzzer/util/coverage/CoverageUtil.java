@@ -1,37 +1,51 @@
 package br.unb.cic.jfuzzer.util.coverage;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 public class CoverageUtil {
 
-    private static final Map<String, Integer> lines = new HashMap<>();
-    private static final Map<String, Integer> methods = new HashMap<>();
-    private static final Map<String, Integer> branches = new HashMap<>();
+    private CoverageUtil() {
 
-    public static void updateLine(String className) {
-        if (!lines.containsKey(className)) {
-            lines.put(className, 0);
-        }
-        lines.put(className, lines.get(className) + 1);
     }
-    
+
+    private static final Map<String, List<Integer>> lines = new HashMap<>();
+    private static final Map<String, Integer> methods = new HashMap<>();
+    private static final Map<String, List<Integer>> branches = new HashMap<>();
+
     public static void updateMethod(String className) {
         if (!methods.containsKey(className)) {
             methods.put(className, 0);
         }
         methods.put(className, methods.get(className) + 1);
     }
-    
-    public static void updateBranch(String className, String methodName) {
-        String fullName = className+"."+methodName;
-        if (!branches.containsKey(fullName)) {
-            branches.put(fullName, 0);
+
+    public static void updateLine(String className, Integer line) {
+        if (!lines.containsKey(className)) {
+            lines.put(className, new LinkedList<>());
         }
-        branches.put(fullName, branches.get(className) + 1);
+        List<Integer> list = lines.get(className);
+        if (!list.contains(line)) {
+            list.add(line);
+            lines.put(className, list);
+        }
     }
 
-    public static Map<String, Integer> getLines() {
+    public static void updateBranch(String className, String methodName, Integer line) {
+        String fullName = className + "." + methodName;
+        if (!branches.containsKey(fullName)) {
+            branches.put(fullName, new LinkedList<>());
+        }
+        List<Integer> list = branches.get(className);
+        if (!list.contains(line)) {
+            list.add(line);
+            branches.put(className, list);
+        }
+    }
+
+    public static Map<String, List<Integer>> getLines() {
         return lines;
     }
 
@@ -39,10 +53,8 @@ public class CoverageUtil {
         return methods;
     }
 
-    public static Map<String, Integer> getBranches() {
+    public static Map<String, List<Integer>> getBranches() {
         return branches;
     }
-    
-    
 
 }

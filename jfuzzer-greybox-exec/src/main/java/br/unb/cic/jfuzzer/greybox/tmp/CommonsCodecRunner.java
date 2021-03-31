@@ -44,8 +44,9 @@ public class CommonsCodecRunner implements Runner, JFuzzerObserver {
 //        events.forEach(e -> System.out.println(">>> "+ e));
         showEvents();
 
-        tmpShowMethods();
-        
+//        tmpShowMethods();
+        tmpShowLines();
+
         return result;
     }
 
@@ -53,10 +54,16 @@ public class CommonsCodecRunner implements Runner, JFuzzerObserver {
         events.forEach(e -> System.out.println(">>> " + e));
     }
 
-    private void tmpShowMethods() {
-        System.err.println("METHODS ......");
-        Map<String, Integer> methods = CoverageUtil.getMethods();
-        methods.keySet().forEach(k -> System.err.println(k + "=" + methods.get(k)));
+//    private void tmpShowMethods() {
+//        System.err.println("METHODS ......");
+//        Map<String, Integer> methods = CoverageUtil.getMethods();
+//        methods.keySet().forEach(k -> System.err.println(k + "=" + methods.get(k)));
+//    }
+    
+    private void tmpShowLines() {
+        System.err.println("LINES ...................................");
+        Map<String, List<Integer>> lines = CoverageUtil.getLines();
+        lines.keySet().forEach(k -> System.err.println(k + "=" + lines.get(k)));
     }
 
     public void updateEvent(Event event) {

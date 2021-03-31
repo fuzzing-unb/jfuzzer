@@ -8,14 +8,20 @@ public class Event implements Serializable {
 
     private String className;
     private String methodName;
+    private String line;
     private String msg;
 
     public Event() {
     }
 
     public Event(String className, String methodName, String msg) {
+        this(className, methodName, 0+"", msg);
+    }
+
+    public Event(String className, String methodName, String line, String msg) {
         this.className = className;
         this.methodName = methodName;
+        this.line = line;
         this.msg = msg;
     }
 
@@ -23,16 +29,12 @@ public class Event implements Serializable {
         return className;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
     public String getMethodName() {
         return methodName;
     }
 
-    public void setMethodName(String methodName) {
-        this.methodName = methodName;
+    public String getLine() {
+        return line;
     }
 
     public String getMsg() {
@@ -45,7 +47,7 @@ public class Event implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(className, methodName, msg);
+        return Objects.hash(className, line, methodName, msg);
     }
 
     @Override
@@ -57,12 +59,12 @@ public class Event implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         Event other = (Event) obj;
-        return Objects.equals(className, other.className) && Objects.equals(methodName, other.methodName) && Objects.equals(msg, other.msg);
+        return Objects.equals(className, other.className) && line == other.line && Objects.equals(methodName, other.methodName) && Objects.equals(msg, other.msg);
     }
 
     @Override
     public String toString() {
-        return String.format("Event [className=%s, methodName=%s, msg=%s]", className, methodName, msg);
+        return String.format("Event [className=%s, methodName=%s, line=%s, msg=%s]", className, methodName, line, msg);
     }
 
 }

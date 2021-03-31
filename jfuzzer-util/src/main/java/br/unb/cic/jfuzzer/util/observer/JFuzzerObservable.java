@@ -14,8 +14,13 @@ public class JFuzzerObservable {
         observers.remove(observer);
     }
 
+    @Deprecated
     public static void setEvent(String className, String methodName, String msg) {
         setEvent(new Event(className, methodName, msg));
+    }
+    
+    public static void setEvent(String className, String methodName, String line, String msg) {
+        setEvent(new Event(className, methodName, line, msg));
     }
 
     public static void setEvent(Event event) {
