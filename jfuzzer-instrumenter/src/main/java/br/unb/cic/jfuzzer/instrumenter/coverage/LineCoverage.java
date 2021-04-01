@@ -45,7 +45,7 @@ public class LineCoverage extends ClassVisitor implements ICoverage {
         MethodVisitor mv = cv.visitMethod(access, name, desc, signature, exceptions);
 
         System.err.println("  - METHOD=" + name + " ... " + signature);
-        CoverageUtil.updateMethod(classname);
+        CoverageUtil.updateMethod(classname, name);
 
         return mv == null ? null : new MethodTransformVisitor(mv, classname, name);
     }

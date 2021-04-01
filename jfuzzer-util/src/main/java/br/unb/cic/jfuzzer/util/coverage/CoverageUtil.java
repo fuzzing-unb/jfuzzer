@@ -12,14 +12,18 @@ public class CoverageUtil {
     }
 
     private static final Map<String, List<Integer>> lines = new HashMap<>();
-    private static final Map<String, Integer> methods = new HashMap<>();
+    private static final Map<String, List<String>> methods = new HashMap<>();
     private static final Map<String, List<Integer>> branches = new HashMap<>();
 
-    public static void updateMethod(String className) {
+    public static void updateMethod(String className, String methodName) {
         if (!methods.containsKey(className)) {
-            methods.put(className, 0);
+            methods.put(className, new LinkedList<>());
         }
-        methods.put(className, methods.get(className) + 1);
+        List<String> list = methods.get(className);
+        if (!list.contains(methodName)) {
+            list.add(methodName);
+            methods.put(className, list);
+        }        
     }
 
     public static void updateLine(String className, Integer line) {
@@ -38,18 +42,37 @@ public class CoverageUtil {
         if (!branches.containsKey(fullName)) {
             branches.put(fullName, new LinkedList<>());
         }
-        List<Integer> list = branches.get(className);
+        List<Integer> list = branches.get(fullName);
         if (!list.contains(line)) {
             list.add(line);
-            branches.put(className, list);
+            branches.put(fullName, list);
         }
+    }
+
+    public static void printMethods() {
+        System.err.println("METHODS ...................................");
+        Map<String, List<String>> methods = getMethods();
+        //methods.keySet().forEach(k -> System.err.println(k + "=" + methods.get(k).size()));
+        methods.keySet().forEach(k -> System.err.println(k + "=" + methods.get(k)));
+    }
+
+    public static void printLines() {
+        System.err.println("LINES ...................................");
+        Map<String, List<Integer>> lines = getLines();
+        lines.keySet().forEach(k -> System.err.println(k + "=" + lines.get(k)));
+    }
+
+    public static void printBranches() {
+        System.err.println("BRANCHES ...................................");
+        Map<String, List<Integer>> branches = getBranches();
+        branches.keySet().forEach(k -> System.err.println(k + "=" + branches.get(k)));
     }
 
     public static Map<String, List<Integer>> getLines() {
         return lines;
     }
 
-    public static Map<String, Integer> getMethods() {
+    public static Map<String, List<String>> getMethods() {
         return methods;
     }
 

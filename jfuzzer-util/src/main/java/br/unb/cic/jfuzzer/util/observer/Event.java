@@ -3,6 +3,7 @@ package br.unb.cic.jfuzzer.util.observer;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Deprecated
 public class Event implements Serializable {
     private static final long serialVersionUID = 1L;
 

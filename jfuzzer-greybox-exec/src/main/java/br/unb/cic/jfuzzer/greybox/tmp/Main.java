@@ -6,9 +6,11 @@ import br.unb.cic.jfuzzer.FuzzerConfig;
 import br.unb.cic.jfuzzer.api.RunnerResult;
 import br.unb.cic.jfuzzer.greybox.GreyBoxFuzzer;
 import br.unb.cic.jfuzzer.util.Range;
+import br.unb.cic.jfuzzer.util.coverage.CoverageUtil;
 import br.unb.cic.jfuzzer.util.observer.JFuzzerObservable;
 
 public class Main {
+    
     public static void main(String[] args) {
         System.out.println("Beginning execution ...");        
         
@@ -24,6 +26,16 @@ public class Main {
 
         System.out.println("\n ********* RESULTS **********");
         results.forEach(System.out::println);
+        
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        CoverageUtil.printLines();
+        CoverageUtil.printMethods();
+        CoverageUtil.printBranches();
     }
     
     

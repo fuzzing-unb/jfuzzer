@@ -6,7 +6,6 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
-import br.unb.cic.jfuzzer.instrumenter.coverage.BranchCoverage.MethodTransformVisitor;
 import br.unb.cic.jfuzzer.util.coverage.CoverageException;
 import br.unb.cic.jfuzzer.util.coverage.CoverageUtil;
 
@@ -32,7 +31,7 @@ public class BranchCoverage extends ClassVisitor implements ICoverage {
 
         //System.err.println("  - METHOD=" + name + " ... " + signature);        
 
-        CoverageUtil.updateMethod(clazz);
+        CoverageUtil.updateMethod(clazz, name);
         
 //        MethodTransformVisitor methodTransformVisitor = new MethodTransformVisitor(mv, clazz, name);
 //        writeCoverageEvent(mv, clazz, name, 0, "METHOD_ENTER");

@@ -9,6 +9,7 @@ import br.unb.cic.jfuzzer.api.Runner;
 import br.unb.cic.jfuzzer.api.RunnerResult;
 import br.unb.cic.jfuzzer.fuzzer.StringFuzzer;
 import br.unb.cic.jfuzzer.util.Range;
+import br.unb.cic.jfuzzer.util.coverage.CoverageSummary;
 import br.unb.cic.jfuzzer.util.observer.Event;
 import br.unb.cic.jfuzzer.util.observer.JFuzzerObserver;
 
@@ -17,7 +18,6 @@ public class GreyBoxFuzzer extends StringFuzzer implements JFuzzerObserver {
     //dummy implementation for now
     
     private List<Event> events = new LinkedList<>();
-    
     
     public GreyBoxFuzzer(Range<Integer> range, Random random, String symbols) {
         super(range, random, symbols);
@@ -30,7 +30,11 @@ public class GreyBoxFuzzer extends StringFuzzer implements JFuzzerObserver {
             events = new LinkedList<>();
             RunnerResult<String> result = runner.run(fuzz());
             outcomes.add(result);
+            
             showEvents();
+            
+            System.out.println("************** SUMMARY ********** ");
+            System.out.println(new CoverageSummary(events));
         }
         return outcomes;
     }
@@ -39,6 +43,7 @@ public class GreyBoxFuzzer extends StringFuzzer implements JFuzzerObserver {
         events.forEach(e -> System.out.println(">>> "+ e));
     }
     
+    @Override
     public void updateEvent(Event event) {
         events.add(event);
     }
