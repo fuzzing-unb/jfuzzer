@@ -20,6 +20,7 @@ import java.util.Set;
 
 import br.unb.cic.jfuzzer.api.Fuzzer;
 import br.unb.cic.jfuzzer.fuzzer.NumberFuzzer;
+import br.unb.cic.jfuzzer.util.Range;
 
 public class PbtMain {
 
@@ -43,7 +44,7 @@ public class PbtMain {
             // gera um novo valor e o retorna
             return generator.fuzz();
         }
-        // senao, usa java reflaction para construir o objeto
+        // senao, usa java reflection para construir o objeto
 
         // TODO
         try {
@@ -78,6 +79,8 @@ public class PbtMain {
 
                 if (Collection.class.isAssignableFrom(field.getType())) {
                     populateCollection(field, instance);
+                } else if (Enum.class.isAssignableFrom(field.getType())) {
+                    populateEnum(field, instance);
                 } else if (hasValidationAnnotations(field)) {
                     // TODO tratamento expecifico de javax.validation
                     populateAnnotedField(field, instance);
@@ -124,6 +127,30 @@ public class PbtMain {
         }
         // TODO tratar os outros casos
         return new ArrayList<>();
+    }
+
+    private <T> void populateEnum(Field field, T instance) throws NoSuchMethodException, SecurityException, IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+        Class<?> clazz = field.getType();
+        if (clazz.isEnum()) {
+            Object[] enumConstants = clazz.getEnumConstants();
+
+            Integer idx = new NumberFuzzer<Integer>(new Range<>(0, enumConstants.length - 1), getRandom()).fuzz();
+            Enum<?> createEnumInstance = createEnumInstance(enumConstants[idx].toString(), clazz);
+
+            Method setterMethod = getSetterMethod(field.getDeclaringClass(), field);
+            if (!Objects.isNull(setterMethod)) {
+//              System.err.println(">>> " + field + "=" + field.getType() + " >>> " + next(field.getType()));
+                setterMethod.invoke(instance, createEnumInstance);
+//                return next(field.getType());
+            }
+        }
+
+    }
+
+    // private <T extends Enum<T>> T createEnumInstance(String name, Class<T> type)
+    // {
+    private <T extends Enum<T>> T createEnumInstance(String name, Type type) {
+        return Enum.valueOf((Class<T>) type, name);
     }
 
     private <T> void populateField(Field field, T instance) throws IntrospectionException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {

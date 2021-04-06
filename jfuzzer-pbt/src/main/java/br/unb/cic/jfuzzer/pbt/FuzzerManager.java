@@ -27,7 +27,6 @@ public class FuzzerManager {
         cache.put(Double.class, new NumberFuzzer<>(config.getDoubleLengthRange(), config.getRandom().getRandom()));
         cache.put(Long.class, new NumberFuzzer<>(config.getLongLengthRange(), config.getRandom().getRandom()));
         cache.put(Date.class, new DateFuzzer(config.getRandom().getRandom()));
-        //cache.put(getClass(), null)
     }
 
     public <T> void register(Class<T> clazz, Fuzzer<T> generator) {
