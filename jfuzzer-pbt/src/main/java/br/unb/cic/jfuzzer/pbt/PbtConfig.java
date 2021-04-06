@@ -15,7 +15,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class ObjectMotherConfig {
+public class PbtConfig {
     public static final Locale LOCALE = new Locale("pt", "BR");
 
     public static final long DEFAULT_SEED = 123L;
@@ -36,7 +36,7 @@ public class ObjectMotherConfig {
 
     private Randomizer random;
 
-    public ObjectMotherConfig() {
+    public PbtConfig() {
         seed = DEFAULT_SEED;
         charset = DEFAULT_CHARSET;
         randomizationDepth = DEFAULT_RANDOMIZATION_DEPTH;

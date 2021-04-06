@@ -2,62 +2,40 @@ package br.unb.cic.jfuzzer.pbt;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Date;
-import java.util.Random;
-
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import br.unb.cic.jfuzzer.beans.pessoa.Pessoa;
-import br.unb.cic.jfuzzer.fuzzer.DateFuzzer;
-import br.unb.cic.jfuzzer.fuzzer.NumberFuzzer;
-import br.unb.cic.jfuzzer.fuzzer.StringFuzzer;
-import br.unb.cic.jfuzzer.pbt.ObjectMotherConfig;
-import br.unb.cic.jfuzzer.random.ClassicRandomStrategy;
+import br.unb.cic.jfuzzer.beans.pessoa.Telefone;
+import br.unb.cic.jfuzzer.fuzzer.TelefoneGenerator;
 import br.unb.cic.jfuzzer.util.Range;
 
-public class PessoaTest {
+class PessoaTest {
 
-    private static Random random;
-    private static final int MIN = 10;
-    private static final int MAX = 50;
+    private static final Range<Integer> RANGE_STRING = new Range<Integer>(10, 50);
+    private static final Range<Float> RANGE_WEIGHT = new Range<Float>(30.0f, 150.0f);
+    private static final Range<Integer> RANGE_PHONE = new Range<Integer>(0, 3);
+    private static final Range<Integer> PHONE_PREFIX = new Range<>(4, 5);
+    private static final Range<Integer> PHONE_SUFFIX = new Range<>(4, 4);
 
-    private static final float pesoMin = 30.0f;
-    private static final float pesoMax = 150.0f;
-
-    private static final Range<Integer> RANGE = new Range<Integer>(MIN, MAX);
-    private static final Range<Float> RANGE2 = new Range<Float>(pesoMin, pesoMax);
-
-    @BeforeAll
-    public static void init() {
-        random = new ClassicRandomStrategy(ObjectMotherConfig.DEFAULT_SEED).getRandom();
-    }
-
+    
     @Test
     void testPessoa() {
-        NumberFuzzer<Integer> generator = new NumberFuzzer<Integer>(RANGE, random);
-        NumberFuzzer<Float> generator2 = new NumberFuzzer<Float>(RANGE2, random);
-        StringFuzzer stringGenerator = new StringFuzzer(RANGE, random);
-        DateFuzzer dateGenerator = new DateFuzzer(random);
+        PbtConfig config = new PbtConfig();
+        config.setStringLengthRange(RANGE_STRING);
+        config.setFloatLengthRange(RANGE_WEIGHT);
+        config.setCollectionSizeRange(RANGE_PHONE);
+        PbtMain generator = new PbtMain(config);
+        generator.register(Telefone.class, new TelefoneGenerator(generator.getRandom(), PHONE_PREFIX, PHONE_SUFFIX));
 
-        Pessoa pessoa = new Pessoa();
-        pessoa.setId(generator.fuzz());
-        pessoa.setNome(stringGenerator.fuzz());
-        pessoa.setNascimento(dateGenerator.fuzz());
-        pessoa.setPeso(generator2.fuzz());
+        for (int i = 0; i < 20; i++) {
+            Pessoa pessoa = generator.next(Pessoa.class);
+            System.err.println(pessoa);
 
-        assertThat(pessoa.getId()).isNotNull();
-        assertThat(pessoa.getNome()).isNotNull();
-        assertThat(pessoa.getNascimento()).isNotNull();
-        assertThat(pessoa.getPeso()).isNotNull();
-
-        assertThat(pessoa.getId()).isInstanceOf(Integer.class);
-        assertThat(pessoa.getNome()).isInstanceOf(String.class);
-        assertThat(pessoa.getNascimento()).isInstanceOf(Date.class);
-        assertThat(pessoa.getPeso()).isInstanceOf(Float.class);
-
-        assertThat(pessoa.getNome()).hasSizeGreaterThanOrEqualTo(MIN);
-        assertThat(pessoa.getNome()).hasSizeLessThanOrEqualTo(MAX);
+            // TODO relaizar checagens
+            assertThat(pessoa.getNome()).hasSizeGreaterThanOrEqualTo(RANGE_STRING.getMin());
+            assertThat(pessoa.getNome()).hasSizeLessThanOrEqualTo(RANGE_STRING.getMax());
+        }
     }
 
 }

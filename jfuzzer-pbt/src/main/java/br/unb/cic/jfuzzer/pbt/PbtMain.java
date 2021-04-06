@@ -21,16 +21,16 @@ import java.util.Set;
 import br.unb.cic.jfuzzer.api.Fuzzer;
 import br.unb.cic.jfuzzer.fuzzer.NumberFuzzer;
 
-public class ObjectMother {
+public class PbtMain {
 
-    private ObjectMotherConfig config;
+    private PbtConfig config;
     private FuzzerManager generatorManager;
 
-    public ObjectMother() {
-        this(new ObjectMotherConfig());
+    public PbtMain() {
+        this(new PbtConfig());
     }
 
-    public ObjectMother(ObjectMotherConfig config) {
+    public PbtMain(PbtConfig config) {
         this.config = config;
         generatorManager = new FuzzerManager(config);
     }

@@ -12,4 +12,9 @@ public class Telefone implements Entidade<Integer> {
     private String numero;
     private String label;
 
+    @Override
+    public String toString() {
+        return String.format("%s", numero);
+    }
+
 }

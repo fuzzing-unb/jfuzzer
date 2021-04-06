@@ -1,19 +1,21 @@
 package br.unb.cic.jfuzzer.pbt;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 import br.unb.cic.jfuzzer.api.Fuzzer;
+import br.unb.cic.jfuzzer.fuzzer.DateFuzzer;
 import br.unb.cic.jfuzzer.fuzzer.NumberFuzzer;
 import br.unb.cic.jfuzzer.fuzzer.StringFuzzer;
 
 public class FuzzerManager {
 
     private Map<Class, Fuzzer> cache = new HashMap<>();
-    private ObjectMotherConfig config;
+    private PbtConfig config;
 
-    public FuzzerManager(ObjectMotherConfig config) {
+    public FuzzerManager(PbtConfig config) {
         this.config = config;
         init();
     }
@@ -24,6 +26,8 @@ public class FuzzerManager {
         cache.put(Float.class, new NumberFuzzer<>(config.getFloatLengthRange(), config.getRandom().getRandom()));
         cache.put(Double.class, new NumberFuzzer<>(config.getDoubleLengthRange(), config.getRandom().getRandom()));
         cache.put(Long.class, new NumberFuzzer<>(config.getLongLengthRange(), config.getRandom().getRandom()));
+        cache.put(Date.class, new DateFuzzer(config.getRandom().getRandom()));
+        //cache.put(getClass(), null)
     }
 
     public <T> void register(Class<T> clazz, Fuzzer<T> generator) {
