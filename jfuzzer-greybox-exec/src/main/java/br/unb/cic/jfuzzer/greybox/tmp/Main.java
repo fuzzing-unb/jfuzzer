@@ -2,7 +2,7 @@ package br.unb.cic.jfuzzer.greybox.tmp;
 
 import java.util.List;
 
-import org.apache.commons.lang3.math.NumberUtils;
+//import org.apache.commons.lang3.math.NumberUtils;
 
 import br.unb.cic.jfuzzer.FuzzerConfig;
 import br.unb.cic.jfuzzer.api.RunnerResult;
@@ -20,13 +20,13 @@ public class Main {
 //        System.err.println(NumberUtils.createLong("0x72321741"));        
 
         // commons codec
-//        GreyBoxFuzzer fuzzer = new GreyBoxFuzzer(new Range<>(30, 50), FuzzerConfig.getDefaultRandom(), alphabet());
-//      CommonsCodecRunner runner = new CommonsCodecRunner();
+        GreyBoxFuzzer fuzzer = new GreyBoxFuzzer(new Range<>(30, 50), FuzzerConfig.getDefaultRandom(), alphabet());
+      CommonsCodecRunner runner = new CommonsCodecRunner();
 
         //commons lang
-        GreyBoxFuzzer fuzzer = new GreyBoxFuzzer(new Range<>(5, 10), FuzzerConfig.getDefaultRandom(), "x0123456789");
-        CommonsLangNumberUtilsRunner runner = new CommonsLangNumberUtilsRunner();
-
+//        GreyBoxFuzzer fuzzer = new GreyBoxFuzzer(new Range<>(5, 10), FuzzerConfig.getDefaultRandom(), "x0123456789");
+//        CommonsLangNumberUtilsRunner runner = new CommonsLangNumberUtilsRunner();
+//
         JFuzzerObservable.addObserver(fuzzer);
 
         List<RunnerResult<String>> results = fuzzer.run(runner, 5);
