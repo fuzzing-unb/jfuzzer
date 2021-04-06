@@ -18,7 +18,8 @@
 		<coverage.type>l</coverage.type>
 
 		<!-- <excluded.packages.prefixes>br.unb.cic.jfuzzer.util,java,javax,sun,jdk,com/sun,com/ibm,org/xml,apple/awt,com.apple</excluded.packages.prefixes> -->
-		<included.packages.prefixes>org.apache.commons.codec</included.packages.prefixes>
+<!-- 		<included.packages.prefixes>org.apache.commons.codec</included.packages.prefixes> -->
+		<included.packages.prefixes>org.apache.commons.lang3</included.packages.prefixes>		
 
 		<!-- <agent.args>type=${coverage.type};excludedPackages=${excluded.packages.prefixes}</agent.args> -->
 		<agent.args>type=${coverage.type};includedPackages=${included.packages.prefixes}</agent.args>
@@ -49,6 +50,11 @@
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<version>1.15</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.2-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
