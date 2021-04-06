@@ -103,9 +103,13 @@ public class CoverageSummary {
         lines.keySet().forEach(k -> sb.append(k + "=" + lines.get(k) + "\n"));
         sb.append("TOTAL: "+totalLines+"\n");
         sb.append("COVERED: "+coveredLines+"\n");
-        sb.append("% covered: "+ (coveredLines*100)/totalLines);
+        sb.append("% covered: "+ ((totalLines == 0)?0:(coveredLines*100)/totalLines));
 
         return sb.toString();
+    }
+    
+    public float getLineCoveragePercentage() {
+        return ((totalLines == 0)?0:((float)coveredLines*100)/totalLines);
     }
 
 }

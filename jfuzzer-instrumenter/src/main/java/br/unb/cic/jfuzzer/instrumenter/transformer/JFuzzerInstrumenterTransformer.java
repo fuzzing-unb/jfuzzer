@@ -19,18 +19,22 @@ import br.unb.cic.jfuzzer.instrumenter.coverage.BranchCoverage;
 
 public class JFuzzerInstrumenterTransformer implements ClassFileTransformer {
 
-    private static final String EXCLUDED_PACKAGES = "excludedPackages=";
+    @Deprecated private static final String EXCLUDED_PACKAGES = "excludedPackages=";
+    private static final String INCLUDED_PACKAGES = "includedpackages=";
     private static final String ARGS_TYPE = "type=";
-    private static final List<String> EXCLUDED_PACKAGES_PREFIXES = List.of("br/unb/cic/jfuzzer/util","br/unb/cic/jfuzzer/instrumenter","java","javax","sun","jdk","com/sun","com/ibm","org/xml","apple/awt","com.apple","org.objectweb.asm");
+    @Deprecated private static final List<String> EXCLUDED_PACKAGES_PREFIXES = List.of("br/unb/cic/jfuzzer/util","br/unb/cic/jfuzzer/instrumenter","java","javax","sun","jdk","com/sun","com/ibm","org/xml","apple/awt","com.apple","org.objectweb.asm");
+    //private static final List<String> INCLUDED_PACKAGES_PREFIXES = new LinkedList<>(); 
     
     private JFuzzerInstrumenterCoverageType type;
     private String agentArgs;
     private List<String> excludedPackages;
+    private List<String> includedPackages;
 
     public JFuzzerInstrumenterTransformer(String agentArgs) {
         this.agentArgs = agentArgs;
         this.type = JFuzzerInstrumenterCoverageType.CONTROL_FLOW;
         excludedPackages = EXCLUDED_PACKAGES_PREFIXES;
+        includedPackages = new LinkedList<>(); 
         parseArgs();
     }
 
@@ -52,6 +56,15 @@ public class JFuzzerInstrumenterTransformer implements ClassFileTransformer {
                 String[] packages = arg.substring(arg.indexOf("=") + 1).split(",");
                 for(String pack: packages) {
                     excludedPackages.add(pack.strip().replaceAll("[\\s.]", "/"));
+                }
+            }
+            
+            if(arg.startsWith(INCLUDED_PACKAGES)) {
+                System.err.println("INCLUDED_PACKAGES ... "+arg);
+                includedPackages = new LinkedList<>();
+                String[] packages = arg.substring(arg.indexOf("=") + 1).split(",");
+                for(String pack: packages) {
+                    includedPackages.add(pack.strip().replaceAll("[\\s.]", "/"));
                 }
             }
         }
@@ -112,10 +125,16 @@ public class JFuzzerInstrumenterTransformer implements ClassFileTransformer {
 
     
     private boolean validPackagePrefix(String className) {
-        return !excludedPackages.stream()
+        return includedPackages.stream()
                 .anyMatch(className::startsWith);
     }
     
+    @Deprecated
+    private boolean validPackagePrefixOld(String className) {
+        //travata excludedPackages
+        return !excludedPackages.stream()
+                .anyMatch(className::startsWith);
+    }
         
 //        excludedPackages.add("java.*");
 //        excludedPackages.add("sun.*");

@@ -20,7 +20,7 @@ public class CommonsCodecRunner implements Runner {
 
             if (input.equals(decodedVersion)) {
                 result = new RunnerResult<>(input, RunnerStatus.PASS);
-            } else {
+            } else  {
                 result = new RunnerResult<>(input, RunnerStatus.FAIL);
             }
 

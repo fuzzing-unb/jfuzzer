@@ -69,7 +69,10 @@ public class LineCoverage extends ClassVisitor implements ICoverage {
                     && 0 != line) {
                 lastVisitedLine = line;
 
-                writeCoverageEvent(mv, className, methodName, "LINE_" + line);
+                //mv.visitLdcInsn(className + ":" + line + "\n");
+
+                CoverageUtil.updateLine(className, line);
+                writeCoverageEvent(mv, className, methodName, line, "LINE_" + line);
             }
 
             super.visitLineNumber(line, start);

@@ -13,13 +13,15 @@
 	<properties>
 		<greybox.mainClass>br.unb.cic.jfuzzer.greybox.tmp.Main</greybox.mainClass>
 		<!-- for coverage type look JFuzzerInstrumenterCoverageType enum -->
-<!-- 		<coverage.type>c</coverage.type> -->
-		<coverage.type>b</coverage.type>
-<!-- 		<coverage.type>l</coverage.type> -->
+		<!-- <coverage.type>c</coverage.type> -->
+		<!-- <coverage.type>b</coverage.type> -->
+		<coverage.type>l</coverage.type>
 
-		<excluded.packages.prefixes>br.unb.cic.jfuzzer.util,java,javax,sun,jdk,com/sun,com/ibm,org/xml,apple/awt,com.apple</excluded.packages.prefixes>
+		<!-- <excluded.packages.prefixes>br.unb.cic.jfuzzer.util,java,javax,sun,jdk,com/sun,com/ibm,org/xml,apple/awt,com.apple</excluded.packages.prefixes> -->
+		<included.packages.prefixes>org.apache.commons.codec</included.packages.prefixes>
 
-		<agent.args>type=${coverage.type};excludedPackages=${excluded.packages.prefixes}</agent.args>
+		<!-- <agent.args>type=${coverage.type};excludedPackages=${excluded.packages.prefixes}</agent.args> -->
+		<agent.args>type=${coverage.type};includedPackages=${included.packages.prefixes}</agent.args>
 
 		<!-- plugins versions -->
 		<maven-assembly-plugin.version>3.3.0</maven-assembly-plugin.version>
