@@ -1,6 +1,5 @@
 package br.unb.cic.jfuzzer.pbt;
 
-import java.awt.List;
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -12,8 +11,10 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
@@ -57,9 +58,19 @@ public class PbtMain {
         return null;
     }
 
+    private List<Field> getAllFields(Class<?> type) {
+        List<Field> fields = new ArrayList<>();
+        for (Class<?> c = type; c != null; c = c.getSuperclass()) {
+            fields.addAll(Arrays.asList(c.getDeclaredFields()));
+        }
+        return fields;
+    }
+    
     private <T> T nextObject(Class<T> clazz) throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException, IntrospectionException {
-//        System.err.println("::::: TMP ::::");
-        Field[] fields = clazz.getDeclaredFields();
+//        System.err.println("::::: TMP ::::"+clazz);        
+        //Field[] fields = clazz.getDeclaredFields();
+        List<Field> fields = getAllFields(clazz);
+                
         T instance = clazz.getConstructor().newInstance();
         for (Field field : fields) {
 
