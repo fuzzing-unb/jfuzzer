@@ -37,7 +37,7 @@ public class GreyBoxFuzzer extends StringFuzzer implements JFuzzerObserver {
             // showEvents();
 
             CoverageSummary summary = new CoverageSummary(events);
-            float lineCoverage = summary.getLineCoveragePercentage();
+            Float lineCoverage = summary.getLineCoveragePercentage();
             // seedsCoverage.put(result.getInput(), lineCoverage);
             result.setCoverage(lineCoverage);
             outcomes.add(result);
