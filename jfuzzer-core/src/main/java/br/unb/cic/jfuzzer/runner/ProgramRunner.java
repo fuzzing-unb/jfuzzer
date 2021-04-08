@@ -12,7 +12,9 @@ import br.unb.cic.jfuzzer.api.RunnerStatus;
 
 //TODO refazer essa classe com uma forma mais eficiente/confiavel de executar um programa externo
 public class ProgramRunner implements Runner {
+
     private List<String> commands;
+    public Float coverage = 0.0f;
 
     public ProgramRunner(List<String> commands) {
         this.commands = commands;
@@ -20,7 +22,7 @@ public class ProgramRunner implements Runner {
 
     @Override
     public <T> RunnerResult<T> run(T input) {
-        RunnerResult<T> result = new RunnerResult<>(input, RunnerStatus.UNRESOLVED);
+        RunnerResult<T> result = new RunnerResult<>(input, RunnerStatus.UNRESOLVED, coverage);
         try {
             result = execute(input);
         } catch (IOException e) {
@@ -49,9 +51,9 @@ public class ProgramRunner implements Runner {
 
         int exitValue = p.waitFor();
         if (0 == exitValue) {
-            return new RunnerResult<>(input, RunnerStatus.PASS);
+            return new RunnerResult<>(input, RunnerStatus.PASS, coverage);
         }
-        return new RunnerResult<>(input, RunnerStatus.FAIL);
+        return new RunnerResult<>(input, RunnerStatus.FAIL, coverage);
     }
 
 }
