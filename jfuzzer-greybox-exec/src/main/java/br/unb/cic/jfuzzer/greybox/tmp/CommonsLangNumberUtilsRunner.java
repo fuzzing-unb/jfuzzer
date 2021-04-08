@@ -7,23 +7,24 @@ import br.unb.cic.jfuzzer.api.RunnerResult;
 import br.unb.cic.jfuzzer.api.RunnerStatus;
 
 public class CommonsLangNumberUtilsRunner implements Runner {
+    public Float coverage = 0.0f;
 
     @Override
     public <T> RunnerResult<T> run(T input) {
         System.out.println("\n[CommonsLangNumberUtilsRunner] Running: " + input);
-//        RunnerResult<T> result = new RunnerResult<>(input, RunnerStatus.UNRESOLVED);
-//        try {
-//
-//            NumberUtils.createLong(input.toString());
-//            result = new RunnerResult<>(input, RunnerStatus.PASS);
-//            
-//        } catch (Exception e) {
-//            // TODO Auto-generated catch block
-////            e.printStackTrace();
-//            result = new RunnerResult<>(input, RunnerStatus.FAIL);
-//        }
+        // RunnerResult<T> result = new RunnerResult<>(input, RunnerStatus.UNRESOLVED);
+        // try {
+        //
+        // NumberUtils.createLong(input.toString());
+        // result = new RunnerResult<>(input, RunnerStatus.PASS);
+        //
+        // } catch (Exception e) {
+        // // TODO Auto-generated catch block
+        //// e.printStackTrace();
+        // result = new RunnerResult<>(input, RunnerStatus.FAIL);
+        // }
 
-        return new RunnerResult<>(input, RunnerStatus.PASS);
+        return new RunnerResult<>(input, RunnerStatus.PASS, coverage);
     }
 
 }

@@ -1,5 +1,6 @@
 package br.unb.cic.jfuzzer.greybox.tmp;
 
+import java.util.HashMap;
 import java.util.List;
 
 //import org.apache.commons.lang3.math.NumberUtils;
@@ -8,12 +9,16 @@ import br.unb.cic.jfuzzer.FuzzerConfig;
 import br.unb.cic.jfuzzer.api.RunnerResult;
 import br.unb.cic.jfuzzer.fuzzer.StringFuzzer;
 import br.unb.cic.jfuzzer.greybox.GreyBoxFuzzer;
+import br.unb.cic.jfuzzer.greybox.PowerSchedule;
 import br.unb.cic.jfuzzer.util.Range;
 import br.unb.cic.jfuzzer.util.observer.JFuzzerObservable;
 
 public class Main {
 
+    public static int exec = 50;
+
     public static void main(String[] args) {
+
         System.out.println("Beginning execution ...");
 
         // System.err.println(NumberUtils.createLong("0x08000000000000000000"));
@@ -35,7 +40,13 @@ public class Main {
         //
         JFuzzerObservable.addObserver(fuzzer);
 
-        List<RunnerResult<String>> results = fuzzer.run(runner, 50000);
+        List<RunnerResult<String>> results = fuzzer.run(runner, exec);
+        PowerSchedule ps = new PowerSchedule();
+
+        for (int i = 0; i < 500; i++) {
+            fuzzer.run(runner, ps.getBestSeeders(results).keySet());
+            HashMap<String,Float> seeds = ps.getBestSeeders(results);
+        }
 
         // System.out.println("\n ********* RESULTS **********");
         // results.forEach(System.out::println);
