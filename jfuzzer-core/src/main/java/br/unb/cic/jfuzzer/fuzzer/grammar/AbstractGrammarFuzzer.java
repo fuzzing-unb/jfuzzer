@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.MatchResult;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public abstract class AbstractGrammarFuzzer {
+public interface AbstractGrammarFuzzer {
+    static final String START = "<start>";
+    static final Pattern PATTERN = Pattern.compile("(<[^<> ]*>)");
 
-    
-    protected Map<String, List<String>> parse(List<String> lines) {
+    default Map<String, List<String>> parse(List<String> lines) {
         Map<String, List<String>> mapa = new HashMap<>();
 
         for (String line : lines) {
@@ -22,22 +26,34 @@ public abstract class AbstractGrammarFuzzer {
         }
 
         return mapa;
+
+        // EXAMPLE:
+//      ArrayList<String> grammar = new ArrayList<>();
+//      grammar.add("<start>: [<expr>]");
+//      grammar.add("<expr>: [<term> + <expr>, <term> - <expr>, <term>]");
+//      grammar.add("<term>: [<factor> * <term>, <factor> / <term>, <factor>]");
+//      grammar.add("<factor>: [+<factor>, -<factor>, (<expr>), <integer>.<integer>, <integer>]");
+//      grammar.add("<integer>: [<digit><integer>, <digit>]");
+//      grammar.add("<digit>: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]");
     }
-    
-    @Deprecated
-    public Map<String, List<String>> setGrammar(List<String> lines) {
-        Map<String, List<String>> mapa = new HashMap<>();
-        for (String line : lines) {
-            int indexOf = line.indexOf(":");
-            if (indexOf != -1) {
-                String keyword = line.substring(0, indexOf);
-                String values = line.substring(indexOf + 1).strip();
-                mapa.put(keyword, toList(values));
-            }
+
+    default List<MatchResult> nonTerminals(String text) {
+        List<MatchResult> results = new ArrayList<>();
+        Matcher matcher = PATTERN.matcher(text);
+        while (matcher.find()) {
+            results.add(matcher.toMatchResult());
         }
-        return mapa;
+        return results;
     }
-    
+
+    default boolean isNonTerminal(String expansion) {
+        return PATTERN.matcher(expansion).find();
+    }
+
+    default String extract(MatchResult result, String expansion) {
+        return expansion.substring(result.start(), result.end());
+    }
+
     private List<String> toList(final String str) {
         List<String> lista = new ArrayList<>();
 

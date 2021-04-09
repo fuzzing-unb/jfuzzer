@@ -3,6 +3,7 @@ package br.unb.cic.jfuzzer.api;
 import java.util.ArrayList;
 import java.util.List;
 
+//TODO fazer com interface default
 public abstract class AbstractFuzzer<T> implements Fuzzer<T> {
 
     //TODO validacoes ... (EX: runner nao pode ser nulo, trials > 0, ...)
