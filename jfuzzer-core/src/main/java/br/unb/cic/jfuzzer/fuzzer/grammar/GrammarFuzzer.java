@@ -9,8 +9,10 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Deprecated
-public class GrammarFuzzer {
+import br.unb.cic.jfuzzer.fuzzer.NumberFuzzer;
+import br.unb.cic.jfuzzer.util.Range;
+
+public class GrammarFuzzer extends AbstractGrammarFuzzer {
     private static final String START = "<start>";
 
     private static final Random random = new Random();
@@ -23,25 +25,14 @@ public class GrammarFuzzer {
         listSelector = new ListFuzzer();
     }
 
-    public void setGrammar(List<String> lines) {
-        Map<String, List<String>> mapa = new HashMap<>();
-        for (String line : lines) {
-            int indexOf = line.indexOf(":");
-            if (indexOf != -1) {
-                String keyword = line.substring(0, indexOf);
-                String values = line.substring(indexOf + 1).strip();
-                mapa.put(keyword, toList(values));
-            }
-        }
-        this.grammar = mapa;
-    }
     
-    private String resolve(String key) {
-        List<String> list = grammar.get(key);
-        String selectedValue = listSelector.setList(list).fuzz();
-        
-        return "";
-    }
+    
+//    private String resolve(String key) {
+//        List<String> list = grammar.get(key);
+//        String selectedValue = listSelector.setList(list).fuzz();
+//        
+//        return "";
+//    }
     
 //    private boolean hasKeyword(String value) {
 //        Matcher matcher = pattern.matcher(text);
@@ -54,43 +45,12 @@ public class GrammarFuzzer {
 //    }
     
 
-    private void teste(Map<String, List<String>> grammar) {
-        List<String> lista = grammar.get(START);
-    }
+//    private void teste(Map<String, List<String>> grammar) {
+//        List<String> lista = grammar.get(START);
+//    }
 
-    @Deprecated
-    public Map<String, List<String>> parse(List<String> lines) {
-        Map<String, List<String>> mapa = new HashMap<>();
 
-        for (String line : lines) {
-            int indexOf = line.indexOf(":");
-            if (indexOf != -1) {
-                String keyword = line.substring(0, indexOf);
-                String values = line.substring(indexOf + 1).strip();
-
-                mapa.put(keyword, toList(values));
-            }
-        }
-
-        return mapa;
-    }
-
-    
-
-    private List<String> toList(final String str) {
-        List<String> lista = new ArrayList<>();
-
-        String tmp = str.substring(str.indexOf("[") + 1).strip();
-        tmp = tmp.substring(0, tmp.length() - 1);
-
-        String[] values = tmp.split(",");
-
-        for (String value : values) {
-            lista.add(value.strip());
-        }
-
-        return lista;
-    }
+       
 
     public static int runTest(String regex, String text) {
         Pattern pattern = Pattern.compile(regex);
@@ -130,14 +90,21 @@ public class GrammarFuzzer {
         
         
         GrammarFuzzer grammarFuzzer = new GrammarFuzzer();
-        Map<String, List<String>> map = new GrammarFuzzer().parse(grammar);
-        grammarFuzzer.simpleGrammarFuzzer(map, START);
+        Map<String, List<String>> map = grammarFuzzer.parse(grammar);        
+        String simpleGrammarFuzzer = grammarFuzzer.simpleGrammarFuzzer(map, START);
+        System.out.println(simpleGrammarFuzzer);
         
+        
+//        List<String> results = new ArrayList<>(); 
+//        for(int i=0; i < 10; i++) {
+//            results.add(grammarFuzzer.simpleGrammarFuzzer(map, START));
+//        }
+//        results.forEach(System.out::println);
     }
     
     
-    private void simpleGrammarFuzzer(Map<String, List<String>> grammar, String start_symbol) {
-        int max_nonterminals=10;
+    private String simpleGrammarFuzzer(Map<String, List<String>> grammar, String start_symbol) {
+        int max_nonterminals=5;
         int max_expansion_trials=100;
         
         String term = start_symbol;
@@ -145,14 +112,49 @@ public class GrammarFuzzer {
         
         List<MatchResult> nonTerminals = nonTerminals(term);
         while(!nonTerminals.isEmpty()) {
+            System.err.println("\nterm="+term);
+            System.err.println("nonTerminals="+nonTerminals);
             String symbol_to_expand = extract(listSelector.setList(nonTerminals).fuzz(), term);
             System.err.println("symbol_to_expand: "+symbol_to_expand);
             
-            nonTerminals = nonTerminals(term);
+            List<String> expansions = grammar.get(symbol_to_expand);
+            System.err.println("expansions="+expansions);
+//            int idx = new NumberFuzzer<Integer>(new Range<>(0,expansions.size()-1)).fuzz();
+//            System.err.println("idx="+idx);
+//            String expansion = expansions.get(idx);
+            String expansion = listSelector.setList(expansions).fuzz();
+            System.err.println("expansion="+expansion);
+            
+            String newTerm = term.replaceFirst(symbol_to_expand, expansion);
+            System.err.println("newTerm="+newTerm);
+            
+//            term = newTerm;
+//            nonTerminals = nonTerminals(term);
+            
+            if(nonTerminals(newTerm).size() < max_nonterminals) {
+                System.err.println("entrou ....");
+                term = newTerm;
+                System.err.println(">>>> "+symbol_to_expand+" --> "+expansion);
+                nonTerminals = nonTerminals(term);
+                expansion_trials = 0;
+            }else {
+                System.err.println("ELSE .........");
+                expansion_trials++;
+                if(expansion_trials >= max_expansion_trials) {
+                    throw new RuntimeException("aaaa");
+                }
+            }
+            
+            
+//            nonTerminals = nonTerminals(symbol_to_expand);
+//            System.out.println(nonTerminals);
+//            cond_tmp = false;
         }
+        return term;
         
 //        String selectedValue = listSelector.setList(list).fuzz();
     }
+    
     
     private static List<MatchResult> nonTerminals(String text) {
         List<MatchResult> results = new ArrayList<>();
