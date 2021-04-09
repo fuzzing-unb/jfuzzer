@@ -18,7 +18,7 @@
 		<argLine />
 
 		<!-- dependencies versions -->
-		<lombok.version>1.18.18</lombok.version>
+		<lombok.version>1.18.20</lombok.version>
 		<junit.version>5.7.0</junit.version>
 		<assertj-core.version>3.19.0</assertj-core.version>
 		<sonar-maven-plugin.version>3.7.0.1746</sonar-maven-plugin.version>
