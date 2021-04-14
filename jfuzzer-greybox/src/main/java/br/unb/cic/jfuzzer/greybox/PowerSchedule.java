@@ -24,8 +24,7 @@ public class PowerSchedule {
         }
         return normEnergy;
     }
-
-    public Seed<String> choose(List<Seed<String>> population){
+    public Seed<String> choose(List<Seed<String>> population) {
         List<Seed<String>> normEnergy = normalizedEnergy(population);
         WeightedRandom<Seed<String>> wr = new WeightedRandom<>();
         for (Seed<String> s : normEnergy) {

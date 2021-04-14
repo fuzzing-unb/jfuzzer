@@ -7,7 +7,7 @@ import br.unb.cic.jfuzzer.api.RunnerResult;
 import br.unb.cic.jfuzzer.api.RunnerStatus;
 
 public class CommonsLangNumberUtilsRunner implements Runner {
-    public Float coverage = 0.0f;
+
 
     @Override
     public <T> RunnerResult<T> run(T input) {
@@ -24,7 +24,7 @@ public class CommonsLangNumberUtilsRunner implements Runner {
         // result = new RunnerResult<>(input, RunnerStatus.FAIL);
         // }
 
-        return new RunnerResult<>(input, RunnerStatus.PASS, coverage);
+        return new RunnerResult<>(input, RunnerStatus.PASS);
     }
 
 }

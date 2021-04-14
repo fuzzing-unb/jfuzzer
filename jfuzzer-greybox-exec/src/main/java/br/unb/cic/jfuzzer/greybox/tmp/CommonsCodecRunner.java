@@ -8,12 +8,10 @@ import br.unb.cic.jfuzzer.api.RunnerStatus;
 
 public class CommonsCodecRunner implements Runner {
 
-    public Float coverage = 0.0f;
-
     @Override
     public <T> RunnerResult<T> run(T input) {
         System.out.println("\n[CommonsCodecRunner] Running: " + input);
-        RunnerResult<T> result = new RunnerResult<>(input, RunnerStatus.UNRESOLVED, coverage);
+        RunnerResult<T> result = new RunnerResult<>(input, RunnerStatus.UNRESOLVED);
         try {
             Base64 base64 = new Base64();
 
@@ -21,15 +19,15 @@ public class CommonsCodecRunner implements Runner {
             String decodedVersion = new String(base64.decode(encodedVersion.getBytes()));
 
             if (input.equals(decodedVersion)) {
-                result = new RunnerResult<>(input, RunnerStatus.PASS, coverage);
+                result = new RunnerResult<>(input, RunnerStatus.PASS);
             } else {
-                result = new RunnerResult<>(input, RunnerStatus.FAIL, coverage);
+                result = new RunnerResult<>(input, RunnerStatus.FAIL);
             }
 
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-            result = new RunnerResult<>(input, RunnerStatus.FAIL, coverage);
+            result = new RunnerResult<>(input, RunnerStatus.FAIL);
         }
 
         return result;

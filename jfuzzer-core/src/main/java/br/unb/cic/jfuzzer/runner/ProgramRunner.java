@@ -14,7 +14,6 @@ import br.unb.cic.jfuzzer.api.RunnerStatus;
 public class ProgramRunner implements Runner {
 
     private List<String> commands;
-    public Float coverage = 0.0f;
 
     public ProgramRunner(List<String> commands) {
         this.commands = commands;
@@ -22,7 +21,7 @@ public class ProgramRunner implements Runner {
 
     @Override
     public <T> RunnerResult<T> run(T input) {
-        RunnerResult<T> result = new RunnerResult<>(input, RunnerStatus.UNRESOLVED, coverage);
+        RunnerResult<T> result = new RunnerResult<>(input, RunnerStatus.UNRESOLVED);
         try {
             result = execute(input);
         } catch (IOException e) {
@@ -51,9 +50,9 @@ public class ProgramRunner implements Runner {
 
         int exitValue = p.waitFor();
         if (0 == exitValue) {
-            return new RunnerResult<>(input, RunnerStatus.PASS, coverage);
+            return new RunnerResult<>(input, RunnerStatus.PASS);
         }
-        return new RunnerResult<>(input, RunnerStatus.FAIL, coverage);
+        return new RunnerResult<>(input, RunnerStatus.FAIL);
     }
 
 }
