@@ -39,15 +39,18 @@ public class Main {
         seeds.add("walter");
         seeds.add("pedro");
         PowerSchedule schedule = new PowerSchedule();
-        int trials = 20;
+        int trials = 30000;
 
         StringMutationFuzzer smf = new StringMutationFuzzer(seeds, schedule, 0);
         System.out.println("\n ********* RESULTS **********");
+        List<String> inputs = new ArrayList<>();
+        long startTime = System.nanoTime();
         for (int i = 0; i < trials; i++){
-            // System.out.println(smf.getIndex());
-            System.out.println(smf.fuzz());
+            inputs.add(smf.fuzz());
         }
-
+        long endTime = System.nanoTime();
+        System.out.println(inputs);
+        System.out.println((endTime - startTime)/1000000);
         // commons lang
         // GreyBoxFuzzer fuzzer = new GreyBoxFuzzer(new Range<>(5, 10),
         // FuzzerConfig.getDefaultRandom(), "x0123456789");
