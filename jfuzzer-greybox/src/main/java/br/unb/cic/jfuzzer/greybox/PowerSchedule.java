@@ -1,72 +1,37 @@
 package br.unb.cic.jfuzzer.greybox;
+import br.unb.cic.jfuzzer.greybox.tmp.Seed;
+import br.unb.cic.jfuzzer.util.WeightedRandom;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.stream.Collectors;
-
-import br.unb.cic.jfuzzer.api.RunnerResult;
-import br.unb.cic.jfuzzer.fuzzer.mutator.StringMutatorFuzzer;
-import br.unb.cic.jfuzzer.util.coverage.CoverageSummary;
-import br.unb.cic.jfuzzer.util.observer.Event;
-
-import java.util.Map;
-import java.util.Collections;
 import java.util.List;
 
 public class PowerSchedule {
 
-    private List<Event> events = new LinkedList<>();
-
-    public HashMap<String, Float> getBestSeeders(List<RunnerResult<String>> outcomes) {
-
-        HashMap<String, Float> seedsCoverage = new HashMap<String, Float>();
-
-        for (RunnerResult<String> out : outcomes) {
-            seedsCoverage.put(out.getInput(), out.getCoverage());
-        }
-
-        Float maxCoverage = (Collections.max(seedsCoverage.values()));
-        Map<String, Float> bestSeed = seedsCoverage.entrySet().stream()
-                .filter(map -> maxCoverage.equals(map.getValue()))
-                .collect(Collectors.toMap(map -> map.getKey(), map -> map.getValue()));
-
-
-        Map<String, Float> bestSeedMutated = mutatedPopulationOfSeeds(bestSeed, 50.0f);
-        return (HashMap<String, Float>) bestSeedMutated;
-
-    }
-
-    public Map<String, Float> mutatedPopulationOfSeeds (Map<String, Float> hm, Float  goal){
-        
-        List<String> inputs = hm.keySet().stream()
-        .collect(Collectors.toList());
-
-        Map<String, Float> population = new HashMap<String, Float>();
-
-        for (String input : inputs) {
-            events = new LinkedList<>();
-            StringMutatorFuzzer smf = new StringMutatorFuzzer(input);
-            String result = smf.fuzz();
-            CoverageSummary summary = new CoverageSummary(events);
-            Float lineCoverage = summary.getLineCoveragePercentage();
-            population.put(result, lineCoverage);
-        }
-
-        if(averagePopulationMuted(population) < goal){
-            mutatedPopulationOfSeeds(population, goal);
+    public List<Seed<String>> assignEnergy(List<Seed<String>> population){
+        for (Seed<String> seed : population) {
+            seed.setEnergy(1.0);
         }
         return population;
     }
 
-
-    public Float averagePopulationMuted(Map<String, Float> hm){
-        Float result = 0.0f;
-        List<Float> coverages = hm.values().stream()
-        .collect(Collectors.toList());
-        for (Float cover : coverages) {
-            result += cover;
+    public List<Seed<String>> normalizedEnergy(List<Seed<String>> population){
+        double sum_energy = 0f;
+        List<Seed<String>> normEnergy = assignEnergy(population);
+        for (Seed<String> seed : normEnergy) {
+            sum_energy += seed.getEnergy();
         }
-        return result/coverages.size();
+        for (Seed<String> seed : normEnergy) {
+            seed.setEnergy(seed.getEnergy()/sum_energy);
+        }
+        return normEnergy;
     }
 
+    public Seed<String> choose(List<Seed<String>> population){
+        List<Seed<String>> normEnergy = normalizedEnergy(population);
+        WeightedRandom<Seed<String>> wr = new WeightedRandom<>();
+        for (Seed<String> s : normEnergy) {
+            wr.addEntry(s, s.getEnergy());
+        }
+        Seed<String> seed = wr.getRandom();
+        return seed;
+    }
 }

@@ -13,35 +13,38 @@ import br.unb.cic.jfuzzer.greybox.tmp.Seed;
 
 public class MutationFuzzer implements Fuzzer{
 
-    private List<Seed<String>> seeds;
+    private List<String> seeds;
     private Mutator mutator;
     private PowerSchedule schedule;
     private List<String> inputs;
 
-    public MutationFuzzer(List<Seed<String>> seeds, Mutator mutator, PowerSchedule schedule) {
+    public MutationFuzzer(List<String> seeds, Mutator mutator, PowerSchedule schedule) {
         this.seeds = seeds;
         this.mutator = mutator;
         this.schedule = schedule;
         this.inputs = new ArrayList<String>();
-        this.reset(seeds);
     }
 
-    public void reset(List<Seed<String>> seeds){
-        List<String> population = new ArrayList();
-        for (Seed<String> s: seeds) {
-            population.add(s.getData().toString());
+    @SuppressWarnings("unchecked")
+    public List<Seed<String>> reset(List<String> seeds){
+        List<Seed<String>> population = new ArrayList<>();
+        for (String s: seeds) {
+            Seed<String> seed = new Seed(s);
+            population.add(seed);
         }
-
-        int seed_index = 0;
         System.out.println(population);
-        System.out.println(seed_index);
+        return population;
     }
 
-    public String createCandidate(Seed<String> seed){
+    @SuppressWarnings("unchecked")
+    public String createCandidate(){
+        PowerSchedule ps = new PowerSchedule();
+        Seed<String> seed = ps.choose(reset(seeds));
         String candidate = seed.getData();
-        int trials = candidate.length();
+        System.out.println(candidate);
+        int trials = Math.min(candidate.length(), getRandomNumber(1, 5));
         for (int i = 0; i < trials; i++) {
-            candidate = mutator.mutate(candidate);
+            candidate = (String) mutator.mutate(candidate);
         }
         System.out.println(candidate);
         return candidate;
@@ -49,9 +52,17 @@ public class MutationFuzzer implements Fuzzer{
 
     
     @Override
-    public Object fuzz() {
-        return null;
-        // TODO
+    public String fuzz() {
+        int seed_index = 0;
+        String input = null;
+        if(seed_index < seeds.size()){
+            input = seeds.get(seed_index);
+            seed_index += 1;
+        }else{
+            input = createCandidate();
+        }
+        inputs.add(input);
+        return input;
     }
 
     @Override
@@ -62,5 +73,9 @@ public class MutationFuzzer implements Fuzzer{
     @Override
     public List run(Runner runner, int trials) {
         return null;
+    }
+
+    public int getRandomNumber(int min, int max) {
+        return (int) ((Math.random() * (max - min)) + min);
     }
 }
