@@ -8,7 +8,7 @@ import java.util.regex.MatchResult;
 import br.unb.cic.jfuzzer.api.AbstractFuzzer;
 import br.unb.cic.jfuzzer.fuzzer.ListFuzzer;
 
-public class SimpleGrammarFuzzer extends AbstractFuzzer<String> implements AbstractGrammarFuzzer {
+public class SimpleGrammarFuzzer extends AbstractFuzzer<String> implements GrammarFuzzer {
 
     private Map<String, List<String>> grammar;
     private String startSymbol;

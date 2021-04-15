@@ -9,6 +9,7 @@ public class Grammars {
     public static final Map<String, List<String>> CGI = cgi();
     public static final Map<String, List<String>> URL = url();
     public static final Map<String, List<String>> EMAIL = email();
+    public static final Map<String, List<String>> PHONE = phone();
 
     private static Map<String, List<String>> terminals() {
         Map<String, List<String>> grammar = new HashMap<>();
@@ -58,6 +59,18 @@ public class Grammars {
         grammar.put("<email>", List.of("<user>@<host>"));
         grammar.put("<host>", List.of("gmail.com", "outlook.com", "unb.br", "protonmail.com"));
         grammar.put("<user>", List.of("fausto", "luis", "pedro", "rodrigo", "walter"));
+        return grammar;
+    }
+
+    private static Map<String, List<String>> phone() {
+        Map<String, List<String>> grammar = new HashMap<>();
+        grammar.put("<start>", List.of("<phone-number>"));
+        grammar.put("<phone-number>", List.of("(<area>)<exchange>-<line>"));
+        grammar.put("<area>", List.of("<lead-digit><digit>"));
+        grammar.put("<exchange>", List.of("<lead-digit><digit><digit><digit>"));
+        grammar.put("<line>", List.of("<digit><digit><digit><digit>"));
+        grammar.put("<lead-digit>", List.of("2", "3", "4", "5", "6", "7", "8", "9"));
+        grammar.put("<digit>", List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9"));
         return grammar;
     }
 

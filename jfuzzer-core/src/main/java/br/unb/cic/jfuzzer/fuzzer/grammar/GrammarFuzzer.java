@@ -8,7 +8,7 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public interface AbstractGrammarFuzzer {
+public interface GrammarFuzzer {
     static final String START = "<start>";
     static final Pattern PATTERN = Pattern.compile("(<[^<> ]*>)");
 

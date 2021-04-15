@@ -8,10 +8,19 @@ public class RunnerResult<T> implements Serializable {
 
     private T input;
     private RunnerStatus status;
+    private Integer code;
+    private String message;
 
     public RunnerResult(T input, RunnerStatus status) {
         this.input = input;
         this.status = status;
+    }
+
+    public RunnerResult(T input, RunnerStatus status, Integer code, String message) {
+        this.input = input;
+        this.status = status;
+        this.code = code;
+        this.message = message;
     }
 
     public T getInput() {
@@ -22,9 +31,17 @@ public class RunnerResult<T> implements Serializable {
         return status;
     }
 
+    public Integer getCode() {
+        return code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hash(input, status);
+        return Objects.hash(code, input, message, status);
     }
 
     @Override
@@ -35,13 +52,13 @@ public class RunnerResult<T> implements Serializable {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        RunnerResult<?> other = (RunnerResult<?>) obj;
-        return Objects.equals(input, other.input) && status == other.status;
+        RunnerResult other = (RunnerResult) obj;
+        return Objects.equals(code, other.code) && Objects.equals(input, other.input) && Objects.equals(message, other.message) && status == other.status;
     }
 
     @Override
     public String toString() {
-        return String.format("[status=%s, input=%s]", status, input);
+        return String.format("RunnerResult [status=%s, code=%s, message=%s, input=%s]", status, code, message, input);
     }
 
 }
