@@ -12,6 +12,8 @@ public class SimpleGrammarFuzzer extends AbstractFuzzer<String> implements Gramm
 
     private Map<String, List<String>> grammar;
     private String startSymbol;
+    private int maxNonterminals = 10;
+    private int maxExpansionTrials = 100;
 
     @Deprecated
     public SimpleGrammarFuzzer() {
@@ -23,40 +25,44 @@ public class SimpleGrammarFuzzer extends AbstractFuzzer<String> implements Gramm
         this.startSymbol = startSymbol;
     }
 
+    public SimpleGrammarFuzzer(Map<String, List<String>> grammar, String startSymbol, int maxNonterminals, int maxExpansionTrials) {
+        this.grammar = grammar;
+        this.startSymbol = startSymbol;
+        this.maxNonterminals = maxNonterminals;
+        this.maxExpansionTrials = maxExpansionTrials;
+    }
+
     @Override
     public String fuzz() {
         return generate(grammar, startSymbol);
     }
 
     private String generate(Map<String, List<String>> grammar, String startSymbol) {
-        int maxNonterminals = 5;
-        int maxExpansionTrials = 100;
-
         String term = startSymbol;
         int expansionTrials = 0;
 
         List<MatchResult> nonTerminals = nonTerminals(term);
         while (!nonTerminals.isEmpty()) {
-            System.err.println("\nterm=" + term);
-            System.err.println("nonTerminals=" + nonTerminals);
+//            System.err.println("\nterm=" + term);
+//            System.err.println("nonTerminals=" + nonTerminals);
             String symbolToExpand = extract(ListFuzzer.fuzz(nonTerminals), term);
-            System.err.println("symbolToExpand: " + symbolToExpand);
+//            System.err.println("symbolToExpand: " + symbolToExpand);
 
             List<String> expansions = grammar.get(symbolToExpand);
-            System.err.println("expansions=" + expansions);
+//            System.err.println("expansions=" + expansions);
             String expansion = ListFuzzer.fuzz(expansions);
-            System.err.println("expansion=" + expansion);
+//            System.err.println("expansion=" + expansion);
             String newTerm = term.replaceFirst(symbolToExpand, expansion);
-            System.err.println("newTerm=" + newTerm);
+//            System.err.println("newTerm=" + newTerm);
 
             if (nonTerminals(newTerm).size() < maxNonterminals) {
-                System.err.println("entrou ....");
+//                System.err.println("entrou ....");
                 term = newTerm;
-                System.err.println(">>>> " + symbolToExpand + " --> " + expansion);
+//                System.err.println(">>>> " + symbolToExpand + " --> " + expansion);
                 nonTerminals = nonTerminals(term);
                 expansionTrials = 0;
             } else {
-                System.err.println("ELSE .........");
+//                System.err.println("ELSE .........");
                 expansionTrials++;
                 if (expansionTrials >= maxExpansionTrials) {
                     throw new RuntimeException("aaaa");
@@ -83,7 +89,7 @@ public class SimpleGrammarFuzzer extends AbstractFuzzer<String> implements Gramm
 
         SimpleGrammarFuzzer simpleGrammarFuzzer = new SimpleGrammarFuzzer();
 //        Map<String, List<String>> map = grammarFuzzer.parse(grammar);        
-        String out = simpleGrammarFuzzer.generate(Grammars.TERMINALS, START);
+        String out = simpleGrammarFuzzer.generate(Grammars.PHONE, START);
         System.out.println(out);
 
         // TESTE ........................
@@ -102,6 +108,10 @@ public class SimpleGrammarFuzzer extends AbstractFuzzer<String> implements Gramm
         System.err.println("EMAIL:");
         for (int i = 0; i < 10; i++) {
             results.add(simpleGrammarFuzzer.generate(Grammars.EMAIL, START));
+        }
+        System.err.println("PHONE:");
+        for (int i = 0; i < 10; i++) {
+            results.add(simpleGrammarFuzzer.generate(Grammars.PHONE, START));
         }
         System.err.println("RESULTS::::::");
         results.forEach(System.err::println);
