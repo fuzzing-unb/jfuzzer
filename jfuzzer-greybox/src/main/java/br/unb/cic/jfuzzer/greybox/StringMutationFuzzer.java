@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.unb.cic.jfuzzer.FuzzerConfig;
-import br.unb.cic.jfuzzer.api.Fuzzer;
-import br.unb.cic.jfuzzer.api.Mutator;
-import br.unb.cic.jfuzzer.api.Runner;
-import br.unb.cic.jfuzzer.api.RunnerResult;
+import br.unb.cic.jfuzzer.api.AbstractFuzzer;
 import br.unb.cic.jfuzzer.fuzzer.mutator.StringMutatorFuzzer;
 import br.unb.cic.jfuzzer.greybox.tmp.Seed;
 
 
-public class StringMutationFuzzer implements Fuzzer<String>{
+public class StringMutationFuzzer extends AbstractFuzzer<String>{
 
     private List<String> seeds;
     private PowerSchedule schedule;
@@ -58,16 +55,6 @@ public class StringMutationFuzzer implements Fuzzer<String>{
         }
         inputs.add(input);
         return input;
-    }
-
-    @Override
-    public RunnerResult<String> run(Runner runner) {
-        return null;
-    }
-
-    @Override
-    public List<RunnerResult<String>> run(Runner runner, int trials) {
-        return null;
     }
 
     public int getRandomNumber(int min, int max) {

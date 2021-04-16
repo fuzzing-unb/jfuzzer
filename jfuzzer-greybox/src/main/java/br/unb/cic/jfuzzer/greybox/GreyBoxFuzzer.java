@@ -3,24 +3,21 @@ package br.unb.cic.jfuzzer.greybox;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 import br.unb.cic.jfuzzer.api.Runner;
 import br.unb.cic.jfuzzer.api.RunnerResult;
-import br.unb.cic.jfuzzer.fuzzer.StringFuzzer;
-import br.unb.cic.jfuzzer.util.Range;
 import br.unb.cic.jfuzzer.util.coverage.CoverageSummary;
 import br.unb.cic.jfuzzer.util.observer.Event;
 import br.unb.cic.jfuzzer.util.observer.JFuzzerObserver;
 
-public class GreyBoxFuzzer extends StringFuzzer implements JFuzzerObserver {
+public class GreyBoxFuzzer extends StringMutationFuzzer implements JFuzzerObserver {
 
     //dummy implementation for now
     
     private List<Event> events = new LinkedList<>();
     
-    public GreyBoxFuzzer(Range<Integer> range, Random random, String symbols) {
-        super(range, random, symbols);
+    public GreyBoxFuzzer(List<String> seeds, PowerSchedule schedule, int index) {
+        super(seeds,schedule,index);
     }
     
     @Override
@@ -31,13 +28,13 @@ public class GreyBoxFuzzer extends StringFuzzer implements JFuzzerObserver {
             RunnerResult<String> result = runner.run(fuzz());
             outcomes.add(result);
             
-            showEvents();
+            // showEvents();
             
             CoverageSummary summary = new CoverageSummary(events);
             float lineCoverage = summary.getLineCoveragePercentage();
             
-            System.out.println("************** SUMMARY ********** ");
-            System.out.println(summary);
+            // System.out.println("************** SUMMARY ********** ");
+            // System.out.println(summary);
             
             System.err.printf("LINE_COVERAGE_PERCENTAGE: %5.2f %% %n",lineCoverage);
         }
