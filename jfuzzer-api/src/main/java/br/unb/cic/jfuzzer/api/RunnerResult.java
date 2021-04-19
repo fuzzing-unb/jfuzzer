@@ -8,10 +8,12 @@ public class RunnerResult<T> implements Serializable {
 
     private T input;
     private RunnerStatus status;
+    private double coverage;
 
     public RunnerResult(T input, RunnerStatus status) {
     this.input = input;
     this.status = status;
+    this.coverage = 0.0f;
     }
 
     public T getInput() {
@@ -20,6 +22,14 @@ public class RunnerResult<T> implements Serializable {
 
     public RunnerStatus getStatus() {
         return status;
+    }
+
+    public double getCoverage() {
+        return coverage;
+    }
+
+    public void setCoverage(double coverage) {
+        this.coverage = coverage;
     }
 
     @Override
@@ -36,12 +46,12 @@ public class RunnerResult<T> implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         RunnerResult<?> other = (RunnerResult<?>) obj;
-        return Objects.equals(input, other.input) && status == other.status;
+        return Objects.equals(input, other.input) && status == other.status && coverage == other.coverage;
     }
 
     @Override
     public String toString() {
-        return String.format("[status=%s, input=%s]", status, input);
+        return String.format("[status=%s, input=%s, coverage=%.2f]", status, input, coverage);
     }
 
 }

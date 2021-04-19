@@ -2,21 +2,23 @@ package br.unb.cic.jfuzzer.greybox.tmp;
 
 import java.util.Map;
 
+import br.unb.cic.jfuzzer.util.coverage.Coverage;
+
 public class Seed<T> {
     
     private T data;
     private double energy;
-    private Map<String,Double> coverage;
+    private Coverage coverage;
 
     public Seed(T data){
         this.data = data;
     }
 
-    public Map<String,Double> getCoverage() {
+    public Coverage getCoverage() {
         return coverage;
     }
 
-    public void setCoverage(Map<String,Double> coverage) {
+    public void setCoverage(Coverage coverage) {
         this.coverage = coverage;
     }
 

@@ -37,5 +37,6 @@ public class Main {
         long endTime = System.nanoTime();
         System.out.println(results);
         System.out.println((endTime - startTime)/1000000);
+        
     }
 }

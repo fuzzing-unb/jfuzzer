@@ -26,25 +26,15 @@ public class GreyBoxFuzzer extends StringMutationFuzzer implements JFuzzerObserv
         for (int i = 0; i < trials; i++) {
             events = new LinkedList<>();
             RunnerResult<String> result = runner.run(fuzz());
-            outcomes.add(result);
-            
-            // showEvents();
             
             CoverageSummary summary = new CoverageSummary(events);
             float lineCoverage = summary.getLineCoveragePercentage();
-            
-            // System.out.println("************** SUMMARY ********** ");
-            // System.out.println(summary);
-            
-            System.err.printf("LINE_COVERAGE_PERCENTAGE: %5.2f %% %n",lineCoverage);
+            result.setCoverage(lineCoverage);
+            outcomes.add(result);
         }
         return outcomes;
     }
-    
-    private void showEvents() {
-        events.forEach(e -> System.out.println(">>> "+ e));
-    }
-    
+        
     @Override
     public void updateEvent(Event event) {
         events.add(event);
