@@ -5,12 +5,13 @@ import java.util.Map;
 import br.unb.cic.jfuzzer.util.coverage.Coverage;
 
 public class Seed<T> {
-    
+
     private T data;
     private double energy;
     private Coverage coverage;
+    private double coverageValue;
 
-    public Seed(T data){
+    public Seed(T data) {
         this.data = data;
     }
 
@@ -18,23 +19,31 @@ public class Seed<T> {
         return coverage;
     }
 
+    public double getCoverageValue() {
+        return coverageValue;
+    }
+
+    public void setCoverageValue(double coverageValue) {
+        this.coverageValue = coverageValue;
+    }
+
     public void setCoverage(Coverage coverage) {
         this.coverage = coverage;
     }
 
-    public T getData(){
+    public T getData() {
         return data;
     }
 
-    public void setData(T data){
+    public void setData(T data) {
         this.data = data;
     }
 
-    public double getEnergy(){
+    public double getEnergy() {
         return energy;
     }
 
-    public void setEnergy(double energy){
+    public void setEnergy(double energy) {
         this.energy = energy;
     }
 }

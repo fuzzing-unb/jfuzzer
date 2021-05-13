@@ -114,7 +114,7 @@
 				<configuration>
 					<executable>java</executable>
 					<arguments>
-						<argument>-Xmx1000m</argument>
+						<argument>-Xmx5000m</argument>
 						<argument>-javaagent:${br.unb.cic.jfuzzer:jfuzzer-instrumenter:jar}=${agent.args}</argument>
 						<!-- <argument>-javaagent:lib/jfuzzer-instrumenter-${project.version}-jar-with-dependencies.jar</argument> -->
 						<argument>-classpath</argument>

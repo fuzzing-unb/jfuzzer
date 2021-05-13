@@ -8,8 +8,7 @@ import br.unb.cic.jfuzzer.api.AbstractFuzzer;
 import br.unb.cic.jfuzzer.fuzzer.mutator.StringMutatorFuzzer;
 import br.unb.cic.jfuzzer.greybox.tmp.Seed;
 
-
-public class StringMutationFuzzer extends AbstractFuzzer<String>{
+public class StringMutationFuzzer extends AbstractFuzzer<String> {
 
     private List<String> seeds;
     private PowerSchedule schedule;
@@ -23,34 +22,35 @@ public class StringMutationFuzzer extends AbstractFuzzer<String>{
         this.index = index;
     }
 
-    public List<Seed<String>> reset(List<String> seeds){
+    public List<Seed<String>> reset(List<String> seeds) {
         List<Seed<String>> population = new ArrayList<>();
-        for (String s: seeds) {
+        for (String s : seeds) {
             Seed<String> seed = new Seed<>(s);
             population.add(seed);
         }
         return population;
     }
 
-    public String createCandidate(){
+    public String createCandidate() {
         List<Seed<String>> population = reset(seeds);
         Seed<String> seed = schedule.choose(population);
         String candidate = seed.getData();
-        int trials = Math.min(candidate.length(), getRandomNumber(1, 5));
-        StringMutatorFuzzer smf = new StringMutatorFuzzer(candidate, 1, trials,  FuzzerConfig.getDefaultRandom());
+        // int trials = Math.min(candidate.length(), getRandomNumber(1, 5));
+        int trials = candidate.length();
+        StringMutatorFuzzer smf = new StringMutatorFuzzer(candidate, 1, trials, FuzzerConfig.getDefaultRandom());
         for (int i = 0; i < trials; i++) {
             candidate = smf.fuzz();
         }
         return candidate;
     }
-    
+
     @Override
     public String fuzz() {
         String input = null;
-        if(index < seeds.size()){
+        if (index < seeds.size()) {
             input = seeds.get(index);
-            setIndex(index+1);
-        }else{
+            setIndex(index + 1);
+        } else {
             input = createCandidate();
         }
         inputs.add(input);
@@ -61,11 +61,11 @@ public class StringMutationFuzzer extends AbstractFuzzer<String>{
         return (int) ((Math.random() * (max - min)) + min);
     }
 
-    public int getIndex(){
+    public int getIndex() {
         return index;
     }
 
-    public void setIndex(int index){
+    public void setIndex(int index) {
         this.index = index;
     }
 }
