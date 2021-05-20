@@ -8,6 +8,7 @@ import java.util.List;
 
 import br.unb.cic.jfuzzer.FuzzerConfig;
 import br.unb.cic.jfuzzer.api.RunnerResult;
+import br.unb.cic.jfuzzer.greybox.BlackBoxFuzzer;
 import br.unb.cic.jfuzzer.greybox.GreyBoxFuzzer;
 import br.unb.cic.jfuzzer.greybox.PowerSchedule;
 import br.unb.cic.jfuzzer.util.observer.JFuzzerObservable;
@@ -19,31 +20,27 @@ public class Main {
         System.out.println("Beginning execution ...");
 
         CommonsCodecRunner runner = new CommonsCodecRunner();
-        List<String> seeds = new ArrayList<>();
-        List<String> seeds2 = new ArrayList<>();
-        seeds.add("Rodrigo");
-        seeds.add("Pedro");
-        seeds.add("walter");
-        seeds.add("good");
         PowerSchedule schedule = new PowerSchedule();
-        int trials = 100000;
-        GreyBoxFuzzer fuzzer = new GreyBoxFuzzer(seeds, schedule, 0);
-        JFuzzerObservable.addObserver(fuzzer);
+        List<String> seeds = new ArrayList<>();
+        seeds.add("Ayalaf40h3#&*F&*(NG(&N");
+        seeds.add("Luis");
+        seeds.add("Walter");
+        seeds.add("Good");
+        seeds.add("Rodrigo");
+        int trials = 1000;
+        int newTrials = 10;
+
+        RunFuzzer rf = new RunFuzzer();
+        List<RunnerResult<String>> results = rf.improveCoverageGB(seeds, schedule, runner, trials, newTrials);
+       
+        System.out.println(results);
+
         // System.out.println("\n ********* RESULTS **********");
         // long startTime = System.nanoTime();
-        List<RunnerResult<String>> results = fuzzer.run(runner, trials);
-        CoverageAnalysis ca = new CoverageAnalysis();
-        // System.out.println((ca.maxCoverage(results).getCoverageValue()));
-        double max = ca.maxCoverage(results).getCoverageValue();
-        seeds.add(ca.maxCoverage(results).getData());
-        List<Seed<String>> bestSeeds = ca.bestSeeds(results);
-        for (Seed<String> s : bestSeeds) {
-            seeds2.add(s.getData());
-        }
+       
         // long endTime = System.nanoTime();
         // System.out.println((endTime - startTime)/1000000);
-        System.out.println(max);
+
         // System.out.println(seeds);
-        System.out.println(seeds2.size());
     }
 }

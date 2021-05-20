@@ -35,8 +35,8 @@ public class StringMutationFuzzer extends AbstractFuzzer<String> {
         List<Seed<String>> population = reset(seeds);
         Seed<String> seed = schedule.choose(population);
         String candidate = seed.getData();
-        // int trials = Math.min(candidate.length(), getRandomNumber(1, 5));
-        int trials = candidate.length();
+        int trials = Math.min(candidate.length(), getRandomNumber(1, 5));
+        //int trials = candidate.length();
         StringMutatorFuzzer smf = new StringMutatorFuzzer(candidate, 1, trials, FuzzerConfig.getDefaultRandom());
         for (int i = 0; i < trials; i++) {
             candidate = smf.fuzz();
