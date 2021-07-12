@@ -25,7 +25,7 @@
 		<jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
 		<maven-surefire-plugin.version>3.0.0-M5</maven-surefire-plugin.version>
 		<wagon-git.version>0.3.0</wagon-git.version>
-		<spotbugs-maven-plugin.version>4.2.0</spotbugs-maven-plugin.version>
+		<spotbugs-maven-plugin.version>4.3.0</spotbugs-maven-plugin.version>
 		<fb-contrib.version>7.4.3.sb</fb-contrib.version>
 		<findsecbugs-plugin.version>1.11.0</findsecbugs-plugin.version>
 
