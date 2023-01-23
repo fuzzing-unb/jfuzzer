@@ -13,7 +13,7 @@
 		<javassist.version>3.27.0-GA</javassist.version>
 		<asm.version>9.1</asm.version>
 		
-		<soot.version>4.2.0</soot.version>
+		<soot.version>4.4.1</soot.version>
 	</properties>
 
 	<dependencies>
